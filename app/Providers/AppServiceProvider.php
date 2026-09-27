@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Cliente;
+use App\Models\Factura;
 use App\Models\Motocicleta;
 use App\Models\Repuesto;
 use App\Models\Servicio;
 use App\Models\User;
 use App\Policies\ClientePolicy;
+use App\Policies\FacturaPolicy;
 use App\Policies\MotocicletaPolicy;
 use App\Policies\RepuestoPolicy;
 use App\Policies\ServicioPolicy;
@@ -67,5 +69,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Repuesto::class, RepuestoPolicy::class);
         Gate::policy(Servicio::class, ServicioPolicy::class);
         Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(Factura::class, FacturaPolicy::class);
     }
 }

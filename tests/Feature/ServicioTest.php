@@ -86,7 +86,7 @@ it('descuenta el stock del repuesto al agregarlo a un servicio', function () {
 
     expect($repuesto->fresh()->cantidad)->toBe(7);
     expect(number_format($servicio->fresh()->costo_total, 2))
-    ->toBe(number_format($servicio->costo_mano_obra + (3 * 20000), 2));
+        ->toBe(number_format($servicio->costo_mano_obra + (3 * 20000), 2));
 });
 
 it('no permite agregar un repuesto si no hay stock suficiente', function () {

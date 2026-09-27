@@ -11,9 +11,7 @@ class ServicioTerminadoMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Servicio $servicio)
-    {
-    }
+    public function __construct(public Servicio $servicio) {}
 
     public function build(): self
     {

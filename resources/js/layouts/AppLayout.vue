@@ -16,6 +16,7 @@ function logout() {
                 <Link href="/repuestos" class="app-link">Repuestos</Link>
                 <Link href="/servicios" class="app-link">Servicios</Link>
                 <Link href="/usuarios" class="app-link">Usuarios</Link>
+                <Link href="/facturas" class="app-link">Facturas</Link>
             </div>
             <button class="app-logout" @click="logout">Salir</button>
         </nav>

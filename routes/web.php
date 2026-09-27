@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\FacturaController;
 use App\Http\Controllers\MotocicletaController;
 use App\Http\Controllers\RepuestoController;
 use App\Http\Controllers\ServicioController;
@@ -28,4 +29,8 @@ Route::middleware('auth')->group(function () {
         ->name('servicios.repuestos.store');
     Route::delete('servicios/{servicio}/repuestos/{detalle}', [ServicioController::class, 'quitarRepuesto'])
         ->name('servicios.repuestos.destroy');
+
+    Route::resource('facturas', FacturaController::class)->except(['show']);
+
+    Route::get('facturas/{factura}/pdf', [FacturaController::class, 'pdf'])->name('facturas.pdf');
 });

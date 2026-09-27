@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -60,6 +61,11 @@ class Servicio extends Model
     public function detalles(): HasMany
     {
         return $this->hasMany(DetalleServicio::class);
+    }
+
+    public function factura(): HasOne
+    {
+        return $this->hasOne(Factura::class);
     }
 
     public function recalcularCostoTotal(): void
