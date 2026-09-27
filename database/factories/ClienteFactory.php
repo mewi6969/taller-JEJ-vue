@@ -16,14 +16,14 @@ class ClienteFactory extends Factory
      * @return array<string, mixed>
      */
     public function definition(): array
-{
-    return [
-        'nombre' => fake()->firstName(),
-        'apellido' => fake()->lastName(),
-        'documento' => fake()->unique()->numerify('##########'),
-        'telefono' => fake()->numerify('3##########'),
-        'email' => fake()->safeEmail(),
-        'direccion' => fake()->address(),
-    ];
-}
+    {
+        return [
+            'nombre' => fake()->firstName(),
+            'apellido' => fake()->lastName(),
+            'documento' => fake()->unique()->numerify('##########'),
+            'telefono' => fake()->numerify('3##########'),
+            'email' => fake()->safeEmail(),
+            'direccion' => fake()->address(),
+        ];
+    }
 }

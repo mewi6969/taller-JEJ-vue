@@ -3,8 +3,9 @@
 use App\Models\Cliente;
 use App\Models\Motocicleta;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 it('redirige a los invitados al login', function () {
     $this->get('/motocicletas')->assertRedirect('/login');

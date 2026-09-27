@@ -2,12 +2,6 @@
 
 namespace App\Providers;
 
-use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Validation\Rules\Password;
 use App\Models\Cliente;
 use App\Models\Motocicleta;
 use App\Models\Repuesto;
@@ -18,6 +12,12 @@ use App\Policies\MotocicletaPolicy;
 use App\Policies\RepuestoPolicy;
 use App\Policies\ServicioPolicy;
 use App\Policies\UserPolicy;
+use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {

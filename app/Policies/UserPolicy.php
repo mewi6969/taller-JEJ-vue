@@ -27,7 +27,7 @@ class UserPolicy
     }
 
     public function delete(User $user, User $model): bool
-{
-    return $user->esAdmin() && $user->id !== $model->id;
-}
+    {
+        return $user->esAdmin() && $user->id !== $model->id;
+    }
 }

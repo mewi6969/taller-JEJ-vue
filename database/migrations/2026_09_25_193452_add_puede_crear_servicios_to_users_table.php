@@ -10,19 +10,19 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::table('users', function (Blueprint $table) {
-        $table->boolean('puede_crear_servicios')->default(false);
-    });
-}
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('puede_crear_servicios')->default(false);
+        });
+    }
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
-{
-    Schema::table('users', function (Blueprint $table) {
-        $table->dropColumn('puede_crear_servicios');
-    });
-}
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('puede_crear_servicios');
+        });
+    }
 };

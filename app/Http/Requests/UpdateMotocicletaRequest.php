@@ -15,10 +15,10 @@ class UpdateMotocicletaRequest extends FormRequest
     {
         return [
             'cliente_id' => 'required|exists:clientes,id',
-            'placa' => 'required|string|max:20|unique:motocicletas,placa,' . $this->route('motocicleta')->id,
+            'placa' => 'required|string|max:20|unique:motocicletas,placa,'.$this->route('motocicleta')->id,
             'marca' => 'required|string|max:255',
             'modelo' => 'required|string|max:255',
-            'anio' => 'nullable|integer|min:1980|max:' . (date('Y') + 1),
+            'anio' => 'nullable|integer|min:1980|max:'.(date('Y') + 1),
             'cilindraje' => 'nullable|integer|min:0',
             'color' => 'nullable|string|max:100',
         ];

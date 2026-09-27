@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Motocicleta;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreMotocicletaRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('create', \App\Models\Motocicleta::class);
+        return $this->user()->can('create', Motocicleta::class);
     }
 
     public function rules(): array
@@ -18,7 +19,7 @@ class StoreMotocicletaRequest extends FormRequest
             'placa' => 'required|string|max:20|unique:motocicletas,placa',
             'marca' => 'required|string|max:255',
             'modelo' => 'required|string|max:255',
-            'anio' => 'nullable|integer|min:1980|max:' . (date('Y') + 1),
+            'anio' => 'nullable|integer|min:1980|max:'.(date('Y') + 1),
             'cilindraje' => 'nullable|integer|min:0',
             'color' => 'nullable|string|max:100',
         ];

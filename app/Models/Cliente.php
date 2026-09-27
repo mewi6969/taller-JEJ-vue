@@ -20,8 +20,7 @@ class Cliente extends Model
     ];
 
     public function motocicletas()
-{
-    return $this->hasMany(Motocicleta::class);
-}
-
+    {
+        return $this->hasMany(Motocicleta::class);
+    }
 }

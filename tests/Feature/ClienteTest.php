@@ -2,9 +2,10 @@
 
 use App\Models\Cliente;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 
-uses(Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
 it('redirige a los invitados al login', function () {
     $this->get('/clientes')->assertRedirect('/login');

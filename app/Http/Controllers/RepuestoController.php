@@ -12,29 +12,29 @@ use Inertia\Response;
 class RepuestoController extends Controller
 {
     public function index(): Response
-{
-    $this->authorize('viewAny', Repuesto::class);
+    {
+        $this->authorize('viewAny', Repuesto::class);
 
-    $repuestos = Repuesto::query()
-        ->when(request('buscar'), function ($query, $buscar) {
-            $query->where('nombre', 'like', "%{$buscar}%");
-        })
-        ->orderBy('nombre')
-        ->paginate(10)
-        ->withQueryString();
+        $repuestos = Repuesto::query()
+            ->when(request('buscar'), function ($query, $buscar) {
+                $query->where('nombre', 'like', "%{$buscar}%");
+            })
+            ->orderBy('nombre')
+            ->paginate(10)
+            ->withQueryString();
 
-    return Inertia::render('repuestos/Index', [
-        'repuestos' => $repuestos,
-        'filtros' => request()->only('buscar'),
-    ]);
-}
+        return Inertia::render('repuestos/Index', [
+            'repuestos' => $repuestos,
+            'filtros' => request()->only('buscar'),
+        ]);
+    }
 
     public function create(): Response
-{
-    $this->authorize('create', Repuesto::class);
+    {
+        $this->authorize('create', Repuesto::class);
 
-    return Inertia::render('repuestos/Create');
-}
+        return Inertia::render('repuestos/Create');
+    }
 
     public function store(StoreRepuestoRequest $request): RedirectResponse
     {
@@ -45,13 +45,13 @@ class RepuestoController extends Controller
     }
 
     public function edit(Repuesto $repuesto): Response
-{
-    $this->authorize('update', $repuesto);
+    {
+        $this->authorize('update', $repuesto);
 
-    return Inertia::render('repuestos/Edit', [
-        'repuesto' => $repuesto,
-    ]);
-}
+        return Inertia::render('repuestos/Edit', [
+            'repuesto' => $repuesto,
+        ]);
+    }
 
     public function update(UpdateRepuestoRequest $request, Repuesto $repuesto): RedirectResponse
     {

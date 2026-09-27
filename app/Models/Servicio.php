@@ -7,22 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Servicio extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-    'motocicleta_id',
-    'mecanico_id',
-    'descripcion_problema',
-    'estado',
-    'costo_mano_obra',
-    'costo_total',
-    'fecha_ingreso',
-    'fecha_entrega',
-    'observaciones',
-];
+        'motocicleta_id',
+        'mecanico_id',
+        'descripcion_problema',
+        'estado',
+        'costo_mano_obra',
+        'costo_total',
+        'fecha_ingreso',
+        'fecha_entrega',
+        'observaciones',
+    ];
 
     protected $casts = [
         'costo_mano_obra' => 'decimal:2',
@@ -49,7 +50,7 @@ class Servicio extends Model
     public function recalcularCostoTotal(): void
     {
         $costoRepuestos = $this->detalles()->sum(
-            \Illuminate\Support\Facades\DB::raw('cantidad * precio_unitario')
+            DB::raw('cantidad * precio_unitario')
         );
 
         $this->update([

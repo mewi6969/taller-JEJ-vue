@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Repuesto;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRepuestoRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('create', \App\Models\Repuesto::class);
+        return $this->user()->can('create', Repuesto::class);
     }
 
     public function rules(): array

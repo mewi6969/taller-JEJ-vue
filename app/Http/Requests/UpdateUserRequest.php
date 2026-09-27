@@ -9,9 +9,9 @@ use Illuminate\Validation\Rules\Password;
 class UpdateUserRequest extends FormRequest
 {
     public function authorize(): bool
-{
-    return $this->user()->can('update', $this->route('usuario'));
-}
+    {
+        return $this->user()->can('update', $this->route('usuario'));
+    }
 
     public function rules(): array
     {

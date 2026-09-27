@@ -10,22 +10,22 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('clientes', function (Blueprint $table) {
-        $table->id();
-        $table->string('nombre');
-        $table->string('apellido');
-        $table->string('documento')->unique();
-        $table->string('telefono');
-        $table->string('email')->nullable();
-        $table->string('direccion')->nullable();
-        $table->timestamps();
-        $table->softDeletes();
-    });
-}
+    {
+        Schema::create('clientes', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre');
+            $table->string('apellido');
+            $table->string('documento')->unique();
+            $table->string('telefono');
+            $table->string('email')->nullable();
+            $table->string('direccion')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
 
-public function down(): void
-{
-    Schema::dropIfExists('clientes');
-}
+    public function down(): void
+    {
+        Schema::dropIfExists('clientes');
+    }
 };

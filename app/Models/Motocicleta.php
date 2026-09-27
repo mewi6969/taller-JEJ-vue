@@ -27,7 +27,7 @@ class Motocicleta extends Model
     }
 
     public function servicios(): HasMany
-{
-    return $this->hasMany(Servicio::class);
-}
+    {
+        return $this->hasMany(Servicio::class);
+    }
 }
