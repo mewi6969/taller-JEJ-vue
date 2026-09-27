@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Mail\ServicioTerminadoMail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class Servicio extends Model
 {
@@ -31,6 +33,19 @@ class Servicio extends Model
         'fecha_ingreso' => 'date',
         'fecha_entrega' => 'date',
     ];
+
+    protected static function booted(): void
+    {
+        static::updated(function (Servicio $servicio) {
+            if ($servicio->wasChanged('estado') && $servicio->estado === 'terminado') {
+                $cliente = $servicio->motocicleta->cliente;
+
+                if ($cliente && $cliente->email) {
+                    Mail::to($cliente->email)->send(new ServicioTerminadoMail($servicio));
+                }
+            }
+        });
+    }
 
     public function motocicleta(): BelongsTo
     {
