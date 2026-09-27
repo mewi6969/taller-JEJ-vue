@@ -28,11 +28,11 @@ Puedes usar ScreenToGif o el Snipping Tool de Windows para grabar el GIF.
 - Autenticación propia (login con límite de intentos, sin paquete de scaffolding)
 - Roles de usuario: **admin**, **recepcionista**, **mecánico**
 - CRUD completo de:
-  - **Clientes**
-  - **Motocicletas** (asociadas a un cliente)
-  - **Repuestos** (con alerta de bajo stock)
-  - **Servicios** (órdenes de trabajo con descuento automático de inventario y cálculo de costos)
-  - **Usuarios** (solo administradores, con eliminación lógica y bloqueo de auto-eliminación)
+    - **Clientes**
+    - **Motocicletas** (asociadas a un cliente)
+    - **Repuestos** (con alerta de bajo stock)
+    - **Servicios** (órdenes de trabajo con descuento automático de inventario y cálculo de costos)
+    - **Usuarios** (solo administradores, con eliminación lógica y bloqueo de auto-eliminación)
 - Eliminación lógica (soft deletes) en todos los módulos
 - Un mecánico solo ve los servicios que tiene asignados; puede recibir permiso especial para crear servicios
 - Suite de pruebas automatizadas con Pest (42 tests / 105 aserciones)
@@ -82,6 +82,7 @@ npm run dev
 Accede en `http://localhost:8000`.
 
 **Usuario de prueba (admin):**
+
 - Correo: `admin@tallermotos.com`
 - Contraseña: `12345678`
 

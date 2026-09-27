@@ -9,26 +9,20 @@ function logout() {
 <template>
     <div class="app-shell">
         <nav class="app-nav">
-    <div class="app-nav-left">
-        <span class="app-brand">Taller de Motos</span>
-        <Link href="/clientes" class="app-link">Clientes</Link>
-        <Link href="/motocicletas" class="app-link">Motocicletas</Link>
-        <Link href="/repuestos" class="app-link">Repuestos</Link>
-        <Link href="/servicios" class="app-link">Servicios</Link>
-        <Link href="/usuarios" class="app-link">Usuarios</Link>
-        
-
-    </div>
-    <button class="app-logout" @click="logout">Salir</button>
-</nav>
+            <div class="app-nav-left">
+                <span class="app-brand">Taller de Motos</span>
+                <Link href="/clientes" class="app-link">Clientes</Link>
+                <Link href="/motocicletas" class="app-link">Motocicletas</Link>
+                <Link href="/repuestos" class="app-link">Repuestos</Link>
+                <Link href="/servicios" class="app-link">Servicios</Link>
+                <Link href="/usuarios" class="app-link">Usuarios</Link>
+            </div>
+            <button class="app-logout" @click="logout">Salir</button>
+        </nav>
 
         <main class="app-content">
             <slot />
         </main>
-
-
-
-
     </div>
 </template>
 

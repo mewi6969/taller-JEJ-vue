@@ -24,14 +24,29 @@ function submit() {
             <form @submit.prevent="submit">
                 <div class="field">
                     <label for="email">Email</label>
-                    <input id="email" type="email" v-model="form.email" autofocus autocomplete="username" />
-                    <span v-if="form.errors.email" class="error">{{ form.errors.email }}</span>
+                    <input
+                        id="email"
+                        type="email"
+                        v-model="form.email"
+                        autofocus
+                        autocomplete="username"
+                    />
+                    <span v-if="form.errors.email" class="error">{{
+                        form.errors.email
+                    }}</span>
                 </div>
 
                 <div class="field">
                     <label for="password">Contraseña</label>
-                    <input id="password" type="password" v-model="form.password" autocomplete="current-password" />
-                    <span v-if="form.errors.password" class="error">{{ form.errors.password }}</span>
+                    <input
+                        id="password"
+                        type="password"
+                        v-model="form.password"
+                        autocomplete="current-password"
+                    />
+                    <span v-if="form.errors.password" class="error">{{
+                        form.errors.password
+                    }}</span>
                 </div>
 
                 <label class="remember">
@@ -39,7 +54,9 @@ function submit() {
                     Recordarme
                 </label>
 
-                <button type="submit" :disabled="form.processing">Iniciar sesión</button>
+                <button type="submit" :disabled="form.processing">
+                    Iniciar sesión
+                </button>
             </form>
         </div>
     </div>
@@ -66,8 +83,8 @@ function submit() {
     flex-direction: column;
     gap: 0.35rem;
 }
-input[type="email"],
-input[type="password"] {
+input[type='email'],
+input[type='password'] {
     padding: 0.6rem;
     border-radius: 6px;
     border: 1px solid #334155;
