@@ -23,91 +23,116 @@ const form = useForm({
 function submit() {
     form.put(`/motocicletas/${props.motocicleta.id}`);
 }
-
-const inputClasses =
-    'rounded-md border border-slate-600 bg-slate-900 px-3 py-2 text-slate-100';
 </script>
 
 <template>
     <Head title="Editar Motocicleta" />
 
     <AppLayout>
-        <h1 class="mb-6 text-2xl font-semibold text-slate-100">
-            Editar Motocicleta
-        </h1>
-
-        <form @submit.prevent="submit" class="flex max-w-md flex-col gap-4">
-            <FormField label="Cliente" :error="form.errors.cliente_id">
-                <select v-model="form.cliente_id" :class="inputClasses">
-                    <option
-                        v-for="cliente in clientes"
-                        :key="cliente.id"
-                        :value="cliente.id"
+        <div class="mx-auto max-w-2xl">
+            <!-- Encabezado -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-semibold text-slate-50">
+                    Editar Motocicleta
+                </h1>
+                <p class="mt-1 text-sm text-slate-400">
+                    Modifica los datos de la moto con placa
+                    <span
+                        class="rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 font-mono text-xs font-semibold tracking-widest text-amber-400 uppercase"
                     >
-                        {{ cliente.nombre }} {{ cliente.apellido }} —
-                        {{ cliente.documento }}
-                    </option>
-                </select>
-            </FormField>
-
-            <FormField label="Placa" :error="form.errors.placa">
-                <input
-                    type="text"
-                    v-model="form.placa"
-                    :class="inputClasses"
-                />
-            </FormField>
-
-            <FormField label="Marca" :error="form.errors.marca">
-                <input
-                    type="text"
-                    v-model="form.marca"
-                    :class="inputClasses"
-                />
-            </FormField>
-
-            <FormField label="Modelo" :error="form.errors.modelo">
-                <input
-                    type="text"
-                    v-model="form.modelo"
-                    :class="inputClasses"
-                />
-            </FormField>
-
-            <FormField label="Año" :error="form.errors.anio">
-                <input
-                    type="number"
-                    v-model="form.anio"
-                    :class="inputClasses"
-                />
-            </FormField>
-
-            <FormField label="Cilindraje" :error="form.errors.cilindraje">
-                <input
-                    type="number"
-                    v-model="form.cilindraje"
-                    :class="inputClasses"
-                />
-            </FormField>
-
-            <FormField label="Color" :error="form.errors.color">
-                <input
-                    type="text"
-                    v-model="form.color"
-                    :class="inputClasses"
-                />
-            </FormField>
-
-            <div class="mt-2 flex gap-3">
-                <AppButton
-                    type="submit"
-                    variant="primary"
-                    :disabled="form.processing"
-                >
-                    Actualizar
-                </AppButton>
-                <AppButton href="/motocicletas">Cancelar</AppButton>
+                        {{ motocicleta.placa }}
+                    </span>
+                </p>
             </div>
-        </form>
+
+            <!-- Tarjeta del formulario -->
+            <form @submit.prevent="submit" class="panel">
+                <div class="grid gap-5 p-6 sm:grid-cols-2">
+                    <div class="sm:col-span-2">
+                        <FormField
+                            label="Cliente"
+                            :error="form.errors.cliente_id"
+                        >
+                            <select v-model="form.cliente_id" class="campo">
+                                <option
+                                    v-for="cliente in clientes"
+                                    :key="cliente.id"
+                                    :value="cliente.id"
+                                >
+                                    {{ cliente.nombre }} {{ cliente.apellido }}
+                                    — {{ cliente.documento }}
+                                </option>
+                            </select>
+                        </FormField>
+                    </div>
+
+                    <FormField label="Placa" :error="form.errors.placa">
+                        <input
+                            type="text"
+                            v-model="form.placa"
+                            class="campo"
+                        />
+                    </FormField>
+
+                    <FormField label="Marca" :error="form.errors.marca">
+                        <input
+                            type="text"
+                            v-model="form.marca"
+                            class="campo"
+                        />
+                    </FormField>
+
+                    <FormField label="Modelo" :error="form.errors.modelo">
+                        <input
+                            type="text"
+                            v-model="form.modelo"
+                            class="campo"
+                        />
+                    </FormField>
+
+                    <FormField label="Año" :error="form.errors.anio">
+                        <input
+                            type="number"
+                            v-model="form.anio"
+                            class="campo"
+                        />
+                    </FormField>
+
+                    <FormField
+                        label="Cilindraje"
+                        :error="form.errors.cilindraje"
+                        ayuda="En centímetros cúbicos (cc)."
+                    >
+                        <input
+                            type="number"
+                            v-model="form.cilindraje"
+                            class="campo"
+                        />
+                    </FormField>
+
+                    <FormField label="Color" :error="form.errors.color">
+                        <input
+                            type="text"
+                            v-model="form.color"
+                            class="campo"
+                        />
+                    </FormField>
+                </div>
+
+                <!-- Pie con botones -->
+                <div
+                    class="flex justify-end gap-3 border-t border-linea bg-superficie-alta/40 px-6 py-4"
+                >
+                    <AppButton href="/motocicletas">Cancelar</AppButton>
+                    <AppButton
+                        type="submit"
+                        variant="primary"
+                        :disabled="form.processing"
+                    >
+                        {{ form.processing ? 'Actualizando...' : 'Actualizar' }}
+                    </AppButton>
+                </div>
+            </form>
+        </div>
     </AppLayout>
 </template>

@@ -57,239 +57,282 @@ function quitarRepuesto() {
     );
 }
 
-const inputClasses =
-    'rounded-md border border-slate-600 bg-slate-900 px-3 py-2 text-slate-100 font-sans';
+function moneda(valor) {
+    return `$${Number(valor ?? 0).toLocaleString('es-CO')}`;
+}
 </script>
 
 <template>
     <Head title="Editar Servicio" />
 
     <AppLayout>
-        <h1 class="mb-6 text-2xl font-semibold text-slate-100">
-            Editar Servicio
-        </h1>
-
-        <form @submit.prevent="submit" class="flex max-w-lg flex-col gap-4">
-            <FormField label="Motocicleta" :error="form.errors.motocicleta_id">
-                <select v-model="form.motocicleta_id" :class="inputClasses">
-                    <option
-                        v-for="moto in motocicletas"
-                        :key="moto.id"
-                        :value="moto.id"
-                    >
-                        {{ moto.placa }} — {{ moto.cliente.nombre }}
-                        {{ moto.cliente.apellido }}
-                    </option>
-                </select>
-            </FormField>
-
-            <FormField label="Mecánico" :error="form.errors.mecanico_id">
-                <select v-model="form.mecanico_id" :class="inputClasses">
-                    <option value="">-- Sin asignar --</option>
-                    <option
-                        v-for="mecanico in mecanicos"
-                        :key="mecanico.id"
-                        :value="mecanico.id"
-                    >
-                        {{ mecanico.name }}
-                    </option>
-                </select>
-            </FormField>
-
-            <FormField
-                label="Descripción del problema"
-                :error="form.errors.descripcion_problema"
-            >
-                <textarea
-                    v-model="form.descripcion_problema"
-                    rows="4"
-                    :class="inputClasses"
-                ></textarea>
-            </FormField>
-
-            <FormField label="Estado" :error="form.errors.estado">
-                <select v-model="form.estado" :class="inputClasses">
-                    <option value="pendiente">Pendiente</option>
-                    <option value="en_proceso">En proceso</option>
-                    <option value="terminado">Terminado</option>
-                    <option value="entregado">Entregado</option>
-                </select>
-            </FormField>
-
-            <FormField
-                label="Costo de mano de obra"
-                :error="form.errors.costo_mano_obra"
-            >
-                <input
-                    type="number"
-                    step="0.01"
-                    v-model="form.costo_mano_obra"
-                    :class="inputClasses"
-                />
-            </FormField>
-
-            <FormField
-                label="Fecha de ingreso"
-                :error="form.errors.fecha_ingreso"
-            >
-                <input
-                    type="date"
-                    v-model="form.fecha_ingreso"
-                    :class="inputClasses"
-                />
-            </FormField>
-
-            <FormField
-                label="Fecha de entrega"
-                :error="form.errors.fecha_entrega"
-            >
-                <input
-                    type="date"
-                    v-model="form.fecha_entrega"
-                    :class="inputClasses"
-                />
-            </FormField>
-
-            <FormField
-                label="Observaciones"
-                :error="form.errors.observaciones"
-            >
-                <textarea
-                    v-model="form.observaciones"
-                    rows="3"
-                    :class="inputClasses"
-                ></textarea>
-            </FormField>
-
-            <div class="mt-2 flex gap-3">
-                <AppButton
-                    type="submit"
-                    variant="primary"
-                    :disabled="form.processing"
-                >
-                    Actualizar
-                </AppButton>
-                <AppButton href="/servicios">Cancelar</AppButton>
+        <div class="mx-auto max-w-3xl">
+            <!-- Encabezado -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-semibold text-slate-50">
+                    Editar Servicio
+                </h1>
+                <p class="mt-1 text-sm text-slate-400">
+                    Actualiza el estado del trabajo y registra los repuestos
+                    usados.
+                </p>
             </div>
-        </form>
 
-        <hr class="my-8 border-slate-700" />
+            <!-- Tarjeta: datos del servicio -->
+            <form @submit.prevent="submit" class="panel mb-8">
+                <div class="grid gap-5 p-6 sm:grid-cols-2">
+                    <FormField
+                        label="Motocicleta"
+                        :error="form.errors.motocicleta_id"
+                    >
+                        <select v-model="form.motocicleta_id" class="campo">
+                            <option
+                                v-for="moto in motocicletas"
+                                :key="moto.id"
+                                :value="moto.id"
+                            >
+                                {{ moto.placa }} — {{ moto.cliente.nombre }}
+                                {{ moto.cliente.apellido }}
+                            </option>
+                        </select>
+                    </FormField>
 
-        <h2 class="mb-4 text-xl font-semibold text-slate-100">
-            Repuestos usados
-        </h2>
+                    <FormField
+                        label="Mecánico"
+                        :error="form.errors.mecanico_id"
+                    >
+                        <select v-model="form.mecanico_id" class="campo">
+                            <option value="">-- Sin asignar --</option>
+                            <option
+                                v-for="mecanico in mecanicos"
+                                :key="mecanico.id"
+                                :value="mecanico.id"
+                            >
+                                {{ mecanico.name }}
+                            </option>
+                        </select>
+                    </FormField>
 
-        <table class="mb-4 w-full max-w-2xl border-collapse">
-            <thead>
-                <tr>
-                    <th class="border-b border-slate-700 p-3 text-left">
-                        Repuesto
-                    </th>
-                    <th class="border-b border-slate-700 p-3 text-left">
-                        Cantidad
-                    </th>
-                    <th class="border-b border-slate-700 p-3 text-left">
-                        Precio unitario
-                    </th>
-                    <th class="border-b border-slate-700 p-3 text-left">
-                        Subtotal
-                    </th>
-                    <th class="border-b border-slate-700 p-3"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="detalle in servicio.detalles" :key="detalle.id">
-                    <td class="border-b border-slate-700 p-3">
-                        {{ detalle.repuesto.nombre }}
-                    </td>
-                    <td class="border-b border-slate-700 p-3">
-                        {{ detalle.cantidad }}
-                    </td>
-                    <td class="border-b border-slate-700 p-3">
-                        ${{
-                            Number(detalle.precio_unitario).toLocaleString(
-                                'es-CO',
-                            )
-                        }}
-                    </td>
-                    <td class="border-b border-slate-700 p-3">
-                        ${{
-                            (
-                                detalle.cantidad * detalle.precio_unitario
-                            ).toLocaleString('es-CO')
-                        }}
-                    </td>
-                    <td class="border-b border-slate-700 p-3">
-                        <AppButton
-                            size="sm"
-                            variant="danger"
-                            @click="confirmarQuitar(detalle)"
+                    <div class="sm:col-span-2">
+                        <FormField
+                            label="Descripción del problema"
+                            :error="form.errors.descripcion_problema"
                         >
-                            Quitar
-                        </AppButton>
-                    </td>
-                </tr>
-                <tr v-if="servicio.detalles.length === 0">
-                    <td colspan="5" class="p-3 text-center text-slate-400">
-                        No se han agregado repuestos a este servicio.
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                            <textarea
+                                v-model="form.descripcion_problema"
+                                rows="4"
+                                class="campo"
+                            ></textarea>
+                        </FormField>
+                    </div>
 
-        <p class="mb-6 text-lg text-slate-100">
-            Costo total:
-            <strong
-                >${{
-                    Number(servicio.costo_total).toLocaleString('es-CO')
-                }}</strong
-            >
-        </p>
+                    <FormField label="Estado" :error="form.errors.estado">
+                        <select v-model="form.estado" class="campo">
+                            <option value="pendiente">Pendiente</option>
+                            <option value="en_proceso">En proceso</option>
+                            <option value="terminado">Terminado</option>
+                            <option value="entregado">Entregado</option>
+                        </select>
+                    </FormField>
 
-        <form
-            @submit.prevent="agregarRepuesto"
-            class="flex max-w-lg items-start gap-2"
-        >
-            <select
-                v-model="repuestoForm.repuesto_id"
-                :class="[inputClasses, 'flex-1']"
-            >
-                <option value="">-- Selecciona un repuesto --</option>
-                <option
-                    v-for="repuesto in repuestos"
-                    :key="repuesto.id"
-                    :value="repuesto.id"
+                    <FormField
+                        label="Costo de mano de obra"
+                        :error="form.errors.costo_mano_obra"
+                    >
+                        <input
+                            type="number"
+                            step="0.01"
+                            v-model="form.costo_mano_obra"
+                            class="campo"
+                        />
+                    </FormField>
+
+                    <FormField
+                        label="Fecha de ingreso"
+                        :error="form.errors.fecha_ingreso"
+                    >
+                        <input
+                            type="date"
+                            v-model="form.fecha_ingreso"
+                            class="campo"
+                        />
+                    </FormField>
+
+                    <FormField
+                        label="Fecha de entrega"
+                        :error="form.errors.fecha_entrega"
+                    >
+                        <input
+                            type="date"
+                            v-model="form.fecha_entrega"
+                            class="campo"
+                        />
+                    </FormField>
+
+                    <div class="sm:col-span-2">
+                        <FormField
+                            label="Observaciones"
+                            :error="form.errors.observaciones"
+                        >
+                            <textarea
+                                v-model="form.observaciones"
+                                rows="3"
+                                class="campo"
+                            ></textarea>
+                        </FormField>
+                    </div>
+                </div>
+
+                <!-- Pie con botones -->
+                <div
+                    class="flex justify-end gap-3 border-t border-linea bg-superficie-alta/40 px-6 py-4"
                 >
-                    {{ repuesto.nombre }} (stock: {{ repuesto.cantidad }})
-                </option>
-            </select>
-            <input
-                type="number"
-                min="1"
-                v-model="repuestoForm.cantidad"
-                placeholder="Cantidad"
-                :class="[inputClasses, 'w-28']"
-            />
-            <AppButton
-                type="submit"
-                variant="primary"
-                :disabled="repuestoForm.processing"
-            >
-                Agregar
-            </AppButton>
-        </form>
-        <span
-            v-if="repuestoForm.errors.repuesto_id"
-            class="mt-2 block text-sm text-red-400"
-        >
-            {{ repuestoForm.errors.repuesto_id }}
-        </span>
-        <span
-            v-if="repuestoForm.errors.cantidad"
-            class="mt-1 block text-sm text-red-400"
-        >
-            {{ repuestoForm.errors.cantidad }}
-        </span>
+                    <AppButton href="/servicios">Cancelar</AppButton>
+                    <AppButton
+                        type="submit"
+                        variant="primary"
+                        :disabled="form.processing"
+                    >
+                        {{ form.processing ? 'Actualizando...' : 'Actualizar' }}
+                    </AppButton>
+                </div>
+            </form>
+
+            <!-- Tarjeta: repuestos usados -->
+            <div class="panel">
+                <div class="border-b border-linea px-6 py-4">
+                    <h2 class="text-base font-semibold text-slate-50">
+                        Repuestos usados
+                    </h2>
+                    <p class="text-xs text-slate-400">
+                        Al agregar o quitar un repuesto, el stock se ajusta solo.
+                    </p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="tabla">
+                        <thead>
+                            <tr>
+                                <th>Repuesto</th>
+                                <th>Cantidad</th>
+                                <th>Precio unitario</th>
+                                <th>Subtotal</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="detalle in servicio.detalles"
+                                :key="detalle.id"
+                            >
+                                <td class="font-medium text-slate-50">
+                                    {{
+                                        detalle.repuesto?.nombre ??
+                                        'Repuesto eliminado'
+                                    }}
+                                </td>
+                                <td class="tabular-nums">
+                                    {{ detalle.cantidad }}
+                                </td>
+                                <td class="tabular-nums">
+                                    {{ moneda(detalle.precio_unitario) }}
+                                </td>
+                                <td class="font-semibold text-slate-100 tabular-nums">
+                                    {{
+                                        moneda(
+                                            detalle.cantidad *
+                                                detalle.precio_unitario,
+                                        )
+                                    }}
+                                </td>
+                                <td>
+                                    <div class="flex justify-end">
+                                        <AppButton
+                                            size="sm"
+                                            variant="danger"
+                                            @click="confirmarQuitar(detalle)"
+                                        >
+                                            Quitar
+                                        </AppButton>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr v-if="servicio.detalles.length === 0">
+                                <td
+                                    colspan="5"
+                                    class="py-10 text-center text-slate-400"
+                                >
+                                    No se han agregado repuestos a este
+                                    servicio.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Costo total -->
+                <div
+                    class="flex items-center justify-between border-t border-linea px-6 py-4"
+                >
+                    <span class="text-sm text-slate-400">Costo total</span>
+                    <span class="text-xl font-semibold text-amber-400 tabular-nums">
+                        {{ moneda(servicio.costo_total) }}
+                    </span>
+                </div>
+
+                <!-- Agregar repuesto -->
+                <form
+                    @submit.prevent="agregarRepuesto"
+                    class="border-t border-linea bg-superficie-alta/40 px-6 py-4"
+                >
+                    <p class="mb-3 text-sm font-medium text-slate-200">
+                        Agregar repuesto
+                    </p>
+                    <div class="flex flex-wrap items-start gap-2">
+                        <select
+                            v-model="repuestoForm.repuesto_id"
+                            class="campo min-w-48 flex-1"
+                        >
+                            <option value="">-- Selecciona un repuesto --</option>
+                            <option
+                                v-for="repuesto in repuestos"
+                                :key="repuesto.id"
+                                :value="repuesto.id"
+                            >
+                                {{ repuesto.nombre }} (stock:
+                                {{ repuesto.cantidad }})
+                            </option>
+                        </select>
+                        <input
+                            type="number"
+                            min="1"
+                            v-model="repuestoForm.cantidad"
+                            placeholder="Cantidad"
+                            class="campo w-28"
+                        />
+                        <AppButton
+                            type="submit"
+                            variant="primary"
+                            :disabled="repuestoForm.processing"
+                        >
+                            Agregar
+                        </AppButton>
+                    </div>
+                    <p
+                        v-if="repuestoForm.errors.repuesto_id"
+                        class="mt-2 text-xs text-red-400"
+                    >
+                        {{ repuestoForm.errors.repuesto_id }}
+                    </p>
+                    <p
+                        v-if="repuestoForm.errors.cantidad"
+                        class="mt-1 text-xs text-red-400"
+                    >
+                        {{ repuestoForm.errors.cantidad }}
+                    </p>
+                </form>
+            </div>
+        </div>
 
         <ConfirmDialog
             :show="!!detalleAQuitar"

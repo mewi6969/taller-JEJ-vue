@@ -12,14 +12,14 @@ defineProps({
 defineEmits(['click']);
 
 const base =
-    'inline-flex items-center justify-center rounded-md border font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950 disabled:opacity-50 disabled:cursor-not-allowed';
+    'inline-flex items-center justify-center rounded-lg border font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-fondo disabled:opacity-50 disabled:cursor-not-allowed';
 
 const variantClasses = {
     default:
-        'border-slate-600 bg-transparent text-slate-100 hover:bg-slate-800 focus:ring-slate-500',
+        'border-linea bg-transparent text-slate-100 hover:bg-superficie-alta focus:ring-slate-500',
     primary:
-        'border-amber-600 bg-amber-600 text-white hover:bg-amber-500 focus:ring-amber-500',
-    danger: 'border-red-700 text-red-300 hover:bg-red-900/30 focus:ring-red-500',
+        'border-amber-600 bg-amber-600 text-white shadow-sm hover:border-amber-500 hover:bg-amber-500 focus:ring-amber-500',
+    danger: 'border-red-700/70 text-red-300 hover:bg-red-900/30 focus:ring-red-500',
 };
 
 const sizeClasses = {
