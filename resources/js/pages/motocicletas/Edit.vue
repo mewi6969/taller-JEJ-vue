@@ -1,5 +1,8 @@
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
+
+import AppButton from '../../components/AppButton.vue';
+import FormField from '../../components/FormField.vue';
 import AppLayout from '../../layouts/AppLayout.vue';
 
 const props = defineProps({
@@ -20,18 +23,22 @@ const form = useForm({
 function submit() {
     form.put(`/motocicletas/${props.motocicleta.id}`);
 }
+
+const inputClasses =
+    'rounded-md border border-slate-600 bg-slate-900 px-3 py-2 text-slate-100';
 </script>
 
 <template>
     <Head title="Editar Motocicleta" />
 
     <AppLayout>
-        <h1>Editar Motocicleta</h1>
+        <h1 class="mb-6 text-2xl font-semibold text-slate-100">
+            Editar Motocicleta
+        </h1>
 
-        <form @submit.prevent="submit" class="form">
-            <div class="field">
-                <label>Cliente</label>
-                <select v-model="form.cliente_id">
+        <form @submit.prevent="submit" class="flex max-w-md flex-col gap-4">
+            <FormField label="Cliente" :error="form.errors.cliente_id">
+                <select v-model="form.cliente_id" :class="inputClasses">
                     <option
                         v-for="cliente in clientes"
                         :key="cliente.id"
@@ -41,110 +48,66 @@ function submit() {
                         {{ cliente.documento }}
                     </option>
                 </select>
-                <span v-if="form.errors.cliente_id" class="error">{{
-                    form.errors.cliente_id
-                }}</span>
-            </div>
-            <div class="field">
-                <label>Placa</label>
-                <input type="text" v-model="form.placa" />
-                <span v-if="form.errors.placa" class="error">{{
-                    form.errors.placa
-                }}</span>
-            </div>
-            <div class="field">
-                <label>Marca</label>
-                <input type="text" v-model="form.marca" />
-                <span v-if="form.errors.marca" class="error">{{
-                    form.errors.marca
-                }}</span>
-            </div>
-            <div class="field">
-                <label>Modelo</label>
-                <input type="text" v-model="form.modelo" />
-                <span v-if="form.errors.modelo" class="error">{{
-                    form.errors.modelo
-                }}</span>
-            </div>
-            <div class="field">
-                <label>Año</label>
-                <input type="number" v-model="form.anio" />
-                <span v-if="form.errors.anio" class="error">{{
-                    form.errors.anio
-                }}</span>
-            </div>
-            <div class="field">
-                <label>Cilindraje</label>
-                <input type="number" v-model="form.cilindraje" />
-                <span v-if="form.errors.cilindraje" class="error">{{
-                    form.errors.cilindraje
-                }}</span>
-            </div>
-            <div class="field">
-                <label>Color</label>
-                <input type="text" v-model="form.color" />
-                <span v-if="form.errors.color" class="error">{{
-                    form.errors.color
-                }}</span>
-            </div>
+            </FormField>
 
-            <div class="actions">
-                <button
+            <FormField label="Placa" :error="form.errors.placa">
+                <input
+                    type="text"
+                    v-model="form.placa"
+                    :class="inputClasses"
+                />
+            </FormField>
+
+            <FormField label="Marca" :error="form.errors.marca">
+                <input
+                    type="text"
+                    v-model="form.marca"
+                    :class="inputClasses"
+                />
+            </FormField>
+
+            <FormField label="Modelo" :error="form.errors.modelo">
+                <input
+                    type="text"
+                    v-model="form.modelo"
+                    :class="inputClasses"
+                />
+            </FormField>
+
+            <FormField label="Año" :error="form.errors.anio">
+                <input
+                    type="number"
+                    v-model="form.anio"
+                    :class="inputClasses"
+                />
+            </FormField>
+
+            <FormField label="Cilindraje" :error="form.errors.cilindraje">
+                <input
+                    type="number"
+                    v-model="form.cilindraje"
+                    :class="inputClasses"
+                />
+            </FormField>
+
+            <FormField label="Color" :error="form.errors.color">
+                <input
+                    type="text"
+                    v-model="form.color"
+                    :class="inputClasses"
+                />
+            </FormField>
+
+            <div class="mt-2 flex gap-3">
+                <AppButton
                     type="submit"
-                    class="btn btn-primary"
+                    variant="primary"
                     :disabled="form.processing"
                 >
                     Actualizar
-                </button>
-                <Link href="/motocicletas" class="btn">Cancelar</Link>
+                </AppButton>
+                <AppButton href="/motocicletas">Cancelar</AppButton>
             </div>
         </form>
     </AppLayout>
 </template>
-
-<style scoped>
-.form {
-    max-width: 420px;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-.field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-}
-.field input,
-.field select {
-    padding: 0.55rem;
-    border-radius: 6px;
-    border: 1px solid #334155;
-    background: #0f172a;
-    color: #e2e8f0;
-}
-.error {
-    color: #f87171;
-    font-size: 0.85rem;
-}
-.actions {
-    display: flex;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
-}
-.btn {
-    display: inline-block;
-    padding: 0.55rem 1rem;
-    border-radius: 6px;
-    border: 1px solid #475569;
-    background: transparent;
-    color: #e2e8f0;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 0.9rem;
-}
-.btn-primary {
-    background: #3b82f6;
-    border-color: #3b82f6;
-    color: white;
-}
-</style>

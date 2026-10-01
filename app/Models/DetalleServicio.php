@@ -42,6 +42,6 @@ class DetalleServicio extends Model
 
     public function repuesto(): BelongsTo
     {
-        return $this->belongsTo(Repuesto::class);
+        return $this->belongsTo(Repuesto::class)->withTrashed();
     }
 }

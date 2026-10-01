@@ -1,6 +1,10 @@
 <script setup>
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
+
+import AppBadge from '../../components/AppBadge.vue';
+import AppButton from '../../components/AppButton.vue';
+import ConfirmDialog from '../../components/ConfirmDialog.vue';
 import AppLayout from '../../layouts/AppLayout.vue';
 
 const props = defineProps({
@@ -9,26 +13,24 @@ const props = defineProps({
 });
 
 const buscar = ref(props.filtros.buscar || '');
+const servicioAEliminar = ref(null);
 
 function buscarServicios() {
     router.get(
         '/servicios',
         { buscar: buscar.value },
-        {
-            preserveState: true,
-            replace: true,
-        },
+        { preserveState: true, replace: true },
     );
 }
 
-function eliminarServicio(servicio) {
-    if (
-        confirm(
-            `¿Eliminar el servicio de la moto ${servicio.motocicleta.placa}?`,
-        )
-    ) {
-        router.delete(`/servicios/${servicio.id}`);
-    }
+function confirmarEliminar(servicio) {
+    servicioAEliminar.value = servicio;
+}
+
+function eliminarServicio() {
+    router.delete(`/servicios/${servicioAEliminar.value.id}`, {
+        onFinish: () => (servicioAEliminar.value = null),
+    });
 }
 
 const estadoLabels = {
@@ -38,207 +40,187 @@ const estadoLabels = {
     entregado: 'Entregado',
 };
 
-const estadoClases = {
-    pendiente: 'badge-pendiente',
-    en_proceso: 'badge-proceso',
-    terminado: 'badge-terminado',
-    entregado: 'badge-entregado',
+const estadoVariants = {
+    pendiente: 'neutral',
+    en_proceso: 'warning',
+    terminado: 'info',
+    entregado: 'ok',
 };
+
+function etiquetaPagina(link, index) {
+    if (index === 0) return 'Anterior';
+    if (index === props.servicios.links.length - 1) return 'Siguiente';
+    return link.label;
+}
 </script>
 
 <template>
     <Head title="Servicios" />
 
     <AppLayout>
-        <div class="header-row">
-            <h1>Servicios</h1>
-            <Link href="/servicios/create" class="btn btn-primary"
-                >+ Nuevo Servicio</Link
-            >
+        <!-- Encabezado -->
+        <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-semibold text-slate-50">Servicios</h1>
+                <p class="mt-1 text-sm text-slate-400">
+                    Órdenes de trabajo del taller y su estado actual.
+                </p>
+            </div>
+            <AppButton href="/servicios/create" variant="primary">
+                + Nuevo Servicio
+            </AppButton>
         </div>
 
-        <form @submit.prevent="buscarServicios" class="search-row">
-            <input
-                type="text"
-                v-model="buscar"
-                placeholder="Buscar por placa"
-            />
-            <button type="submit" class="btn">Buscar</button>
+        <!-- Buscador -->
+        <form @submit.prevent="buscarServicios" class="mb-6 flex gap-2">
+            <div class="relative w-full max-w-sm">
+                <svg
+                    class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-500"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                >
+                    <circle cx="9" cy="9" r="6" />
+                    <path d="M14 14l4 4" />
+                </svg>
+                <input
+                    type="text"
+                    v-model="buscar"
+                    placeholder="Buscar por placa"
+                    class="campo pl-10"
+                />
+            </div>
+            <AppButton type="submit">Buscar</AppButton>
         </form>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Moto</th>
-                    <th>Cliente</th>
-                    <th>Mecánico</th>
-                    <th>Estado</th>
-                    <th>Costo total</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="servicio in servicios.data" :key="servicio.id">
-                    <td>{{ servicio.motocicleta.placa }}</td>
-                    <td>
-                        {{ servicio.motocicleta.cliente.nombre }}
-                        {{ servicio.motocicleta.cliente.apellido }}
-                    </td>
-                    <td>{{ servicio.mecanico?.name ?? 'Sin asignar' }}</td>
-                    <td>
-                        <span
-                            class="badge"
-                            :class="estadoClases[servicio.estado]"
-                        >
-                            {{ estadoLabels[servicio.estado] }}
-                        </span>
-                    </td>
-                    <td>
-                        ${{
-                            Number(servicio.costo_total).toLocaleString('es-CO')
-                        }}
-                    </td>
-                    <td class="actions">
-                        <Link
-                            :href="`/servicios/${servicio.id}/edit`"
-                            class="btn btn-sm"
-                            >Editar</Link
-                        >
-                        <button
-                            class="btn btn-sm btn-danger"
-                            @click="eliminarServicio(servicio)"
-                        >
-                            Eliminar
-                        </button>
-                    </td>
-                </tr>
-                <tr v-if="servicios.data.length === 0">
-                    <td colspan="6" class="empty">
-                        No hay servicios registrados.
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- Tarjeta con tabla -->
+        <div class="panel">
+            <div class="overflow-x-auto">
+                <table class="tabla">
+                    <thead>
+                        <tr>
+                            <th>Moto</th>
+                            <th>Cliente</th>
+                            <th>Mecánico</th>
+                            <th>Estado</th>
+                            <th>Costo total</th>
+                            <th class="text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="servicio in servicios.data" :key="servicio.id">
+                            <td>
+                                <span
+                                    class="rounded-md border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 font-mono text-xs font-semibold tracking-widest text-amber-400 uppercase"
+                                >
+                                    {{ servicio.motocicleta.placa }}
+                                </span>
+                            </td>
+                            <td class="font-medium text-slate-50">
+                                {{ servicio.motocicleta.cliente.nombre }}
+                                {{ servicio.motocicleta.cliente.apellido }}
+                            </td>
+                            <td
+                                :class="
+                                    servicio.mecanico
+                                        ? 'text-slate-300'
+                                        : 'text-slate-500 italic'
+                                "
+                            >
+                                {{ servicio.mecanico?.name ?? 'Sin asignar' }}
+                            </td>
+                            <td>
+                                <AppBadge
+                                    :variant="estadoVariants[servicio.estado]"
+                                >
+                                    {{ estadoLabels[servicio.estado] }}
+                                </AppBadge>
+                            </td>
+                            <td class="font-semibold text-slate-100 tabular-nums">
+                                ${{
+                                    Number(servicio.costo_total).toLocaleString(
+                                        'es-CO',
+                                    )
+                                }}
+                            </td>
+                            <td>
+                                <div class="flex justify-end gap-2">
+                                    <AppButton
+                                        :href="`/servicios/${servicio.id}/edit`"
+                                        size="sm"
+                                    >
+                                        Editar
+                                    </AppButton>
+                                    <AppButton
+                                        size="sm"
+                                        variant="danger"
+                                        @click="confirmarEliminar(servicio)"
+                                    >
+                                        Eliminar
+                                    </AppButton>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr v-if="servicios.data.length === 0">
+                            <td
+                                colspan="6"
+                                class="py-12 text-center text-slate-400"
+                            >
+                                No hay servicios registrados.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-        <div class="pagination">
-            <template v-for="link in servicios.links" :key="link.label">
-                <Link
-                    v-if="link.url"
-                    :href="link.url"
-                    class="page-link"
-                    :class="{ active: link.active }"
-                    v-html="link.label"
-                />
-                <span v-else class="page-link disabled" v-html="link.label" />
-            </template>
+            <!-- Pie: conteo + paginación -->
+            <div
+                class="flex flex-col gap-3 border-t border-linea px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+            >
+                <p class="text-sm text-slate-400">
+                    <template v-if="servicios.total > 0">
+                        Mostrando {{ servicios.from }} a {{ servicios.to }} de
+                        {{ servicios.total }} servicios
+                    </template>
+                    <template v-else>Sin resultados</template>
+                </p>
+
+                <div v-if="servicios.links.length > 3" class="flex gap-1">
+                    <template
+                        v-for="(link, index) in servicios.links"
+                        :key="index"
+                    >
+                        <Link
+                            v-if="link.url"
+                            :href="link.url"
+                            class="min-w-9 rounded-md border px-3 py-1.5 text-center text-sm transition-colors"
+                            :class="
+                                link.active
+                                    ? 'border-amber-500 bg-amber-500 font-semibold text-slate-900'
+                                    : 'border-linea text-slate-300 hover:bg-superficie-alta'
+                            "
+                        >
+                            {{ etiquetaPagina(link, index) }}
+                        </Link>
+                        <span
+                            v-else
+                            class="min-w-9 rounded-md border border-linea px-3 py-1.5 text-center text-sm text-slate-600"
+                        >
+                            {{ etiquetaPagina(link, index) }}
+                        </span>
+                    </template>
+                </div>
+            </div>
         </div>
+
+        <ConfirmDialog
+            :show="!!servicioAEliminar"
+            title="Eliminar servicio"
+            :message="`¿Eliminar el servicio de la moto ${servicioAEliminar?.motocicleta?.placa}?`"
+            @confirm="eliminarServicio"
+            @cancel="servicioAEliminar = null"
+        />
     </AppLayout>
 </template>
-
-<style scoped>
-.header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-.search-row {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-.search-row input {
-    flex: 1;
-    max-width: 320px;
-    padding: 0.5rem;
-    border-radius: 6px;
-    border: 1px solid #334155;
-    background: #0f172a;
-    color: #e2e8f0;
-}
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1.5rem;
-}
-.table th,
-.table td {
-    padding: 0.6rem;
-    border-bottom: 1px solid #334155;
-    text-align: left;
-}
-.actions {
-    display: flex;
-    gap: 0.5rem;
-}
-.empty {
-    text-align: center;
-    color: #94a3b8;
-}
-.btn {
-    display: inline-block;
-    padding: 0.5rem 0.9rem;
-    border-radius: 6px;
-    border: 1px solid #475569;
-    background: transparent;
-    color: #e2e8f0;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 0.9rem;
-}
-.btn-primary {
-    background: #3b82f6;
-    border-color: #3b82f6;
-    color: white;
-}
-.btn-sm {
-    padding: 0.3rem 0.6rem;
-    font-size: 0.8rem;
-}
-.btn-danger {
-    border-color: #b91c1c;
-    color: #fca5a5;
-}
-.pagination {
-    display: flex;
-    gap: 0.4rem;
-    flex-wrap: wrap;
-}
-.page-link {
-    padding: 0.35rem 0.7rem;
-    border-radius: 6px;
-    border: 1px solid #334155;
-    color: #e2e8f0;
-    text-decoration: none;
-    font-size: 0.85rem;
-}
-.page-link.active {
-    background: #3b82f6;
-    border-color: #3b82f6;
-}
-.page-link.disabled {
-    opacity: 0.4;
-}
-.badge {
-    padding: 0.2rem 0.6rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-.badge-pendiente {
-    background: rgba(148, 163, 184, 0.15);
-    color: #cbd5e1;
-}
-.badge-proceso {
-    background: rgba(234, 179, 8, 0.15);
-    color: #fde047;
-}
-.badge-terminado {
-    background: rgba(59, 130, 246, 0.15);
-    color: #93c5fd;
-}
-.badge-entregado {
-    background: rgba(34, 197, 94, 0.15);
-    color: #4ade80;
-}
-</style>

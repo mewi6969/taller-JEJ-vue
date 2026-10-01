@@ -1,5 +1,10 @@
 <script setup>
-import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { Head, router, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
+
+import AppButton from '../../components/AppButton.vue';
+import ConfirmDialog from '../../components/ConfirmDialog.vue';
+import FormField from '../../components/FormField.vue';
 import AppLayout from '../../layouts/AppLayout.vue';
 
 const props = defineProps({
@@ -36,32 +41,37 @@ function agregarRepuesto() {
     });
 }
 
-function quitarRepuesto(detalle) {
-    if (
-        confirm(
-            `¿Quitar ${detalle.repuesto.nombre} de este servicio? El stock se devolverá automáticamente.`,
-        )
-    ) {
-        router.delete(
-            `/servicios/${props.servicio.id}/repuestos/${detalle.id}`,
-            {
-                preserveScroll: true,
-            },
-        );
-    }
+const detalleAQuitar = ref(null);
+
+function confirmarQuitar(detalle) {
+    detalleAQuitar.value = detalle;
 }
+
+function quitarRepuesto() {
+    router.delete(
+        `/servicios/${props.servicio.id}/repuestos/${detalleAQuitar.value.id}`,
+        {
+            preserveScroll: true,
+            onFinish: () => (detalleAQuitar.value = null),
+        },
+    );
+}
+
+const inputClasses =
+    'rounded-md border border-slate-600 bg-slate-900 px-3 py-2 text-slate-100 font-sans';
 </script>
 
 <template>
     <Head title="Editar Servicio" />
 
     <AppLayout>
-        <h1>Editar Servicio</h1>
+        <h1 class="mb-6 text-2xl font-semibold text-slate-100">
+            Editar Servicio
+        </h1>
 
-        <form @submit.prevent="submit" class="form">
-            <div class="field">
-                <label>Motocicleta</label>
-                <select v-model="form.motocicleta_id">
+        <form @submit.prevent="submit" class="flex max-w-lg flex-col gap-4">
+            <FormField label="Motocicleta" :error="form.errors.motocicleta_id">
+                <select v-model="form.motocicleta_id" :class="inputClasses">
                     <option
                         v-for="moto in motocicletas"
                         :key="moto.id"
@@ -71,13 +81,10 @@ function quitarRepuesto(detalle) {
                         {{ moto.cliente.apellido }}
                     </option>
                 </select>
-                <span v-if="form.errors.motocicleta_id" class="error">{{
-                    form.errors.motocicleta_id
-                }}</span>
-            </div>
-            <div class="field">
-                <label>Mecánico</label>
-                <select v-model="form.mecanico_id">
+            </FormField>
+
+            <FormField label="Mecánico" :error="form.errors.mecanico_id">
+                <select v-model="form.mecanico_id" :class="inputClasses">
                     <option value="">-- Sin asignar --</option>
                     <option
                         v-for="mecanico in mecanicos"
@@ -87,127 +94,150 @@ function quitarRepuesto(detalle) {
                         {{ mecanico.name }}
                     </option>
                 </select>
-                <span v-if="form.errors.mecanico_id" class="error">{{
-                    form.errors.mecanico_id
-                }}</span>
-            </div>
-            <div class="field">
-                <label>Descripción del problema</label>
+            </FormField>
+
+            <FormField
+                label="Descripción del problema"
+                :error="form.errors.descripcion_problema"
+            >
                 <textarea
                     v-model="form.descripcion_problema"
                     rows="4"
+                    :class="inputClasses"
                 ></textarea>
-                <span v-if="form.errors.descripcion_problema" class="error">{{
-                    form.errors.descripcion_problema
-                }}</span>
-            </div>
-            <div class="field">
-                <label>Estado</label>
-                <select v-model="form.estado">
+            </FormField>
+
+            <FormField label="Estado" :error="form.errors.estado">
+                <select v-model="form.estado" :class="inputClasses">
                     <option value="pendiente">Pendiente</option>
                     <option value="en_proceso">En proceso</option>
                     <option value="terminado">Terminado</option>
                     <option value="entregado">Entregado</option>
                 </select>
-                <span v-if="form.errors.estado" class="error">{{
-                    form.errors.estado
-                }}</span>
-            </div>
-            <div class="field">
-                <label>Costo de mano de obra</label>
+            </FormField>
+
+            <FormField
+                label="Costo de mano de obra"
+                :error="form.errors.costo_mano_obra"
+            >
                 <input
                     type="number"
                     step="0.01"
                     v-model="form.costo_mano_obra"
+                    :class="inputClasses"
                 />
-                <span v-if="form.errors.costo_mano_obra" class="error">{{
-                    form.errors.costo_mano_obra
-                }}</span>
-            </div>
-            <div class="field">
-                <label>Fecha de ingreso</label>
-                <input type="date" v-model="form.fecha_ingreso" />
-                <span v-if="form.errors.fecha_ingreso" class="error">{{
-                    form.errors.fecha_ingreso
-                }}</span>
-            </div>
-            <div class="field">
-                <label>Fecha de entrega</label>
-                <input type="date" v-model="form.fecha_entrega" />
-                <span v-if="form.errors.fecha_entrega" class="error">{{
-                    form.errors.fecha_entrega
-                }}</span>
-            </div>
-            <div class="field">
-                <label>Observaciones</label>
-                <textarea v-model="form.observaciones" rows="3"></textarea>
-                <span v-if="form.errors.observaciones" class="error">{{
-                    form.errors.observaciones
-                }}</span>
-            </div>
+            </FormField>
 
-            <div class="actions">
-                <button
+            <FormField
+                label="Fecha de ingreso"
+                :error="form.errors.fecha_ingreso"
+            >
+                <input
+                    type="date"
+                    v-model="form.fecha_ingreso"
+                    :class="inputClasses"
+                />
+            </FormField>
+
+            <FormField
+                label="Fecha de entrega"
+                :error="form.errors.fecha_entrega"
+            >
+                <input
+                    type="date"
+                    v-model="form.fecha_entrega"
+                    :class="inputClasses"
+                />
+            </FormField>
+
+            <FormField
+                label="Observaciones"
+                :error="form.errors.observaciones"
+            >
+                <textarea
+                    v-model="form.observaciones"
+                    rows="3"
+                    :class="inputClasses"
+                ></textarea>
+            </FormField>
+
+            <div class="mt-2 flex gap-3">
+                <AppButton
                     type="submit"
-                    class="btn btn-primary"
+                    variant="primary"
                     :disabled="form.processing"
                 >
                     Actualizar
-                </button>
-                <Link href="/servicios" class="btn">Cancelar</Link>
+                </AppButton>
+                <AppButton href="/servicios">Cancelar</AppButton>
             </div>
         </form>
 
-        <hr class="divider" />
+        <hr class="my-8 border-slate-700" />
 
-        <h2>Repuestos usados</h2>
+        <h2 class="mb-4 text-xl font-semibold text-slate-100">
+            Repuestos usados
+        </h2>
 
-        <table class="table">
+        <table class="mb-4 w-full max-w-2xl border-collapse">
             <thead>
                 <tr>
-                    <th>Repuesto</th>
-                    <th>Cantidad</th>
-                    <th>Precio unitario</th>
-                    <th>Subtotal</th>
-                    <th></th>
+                    <th class="border-b border-slate-700 p-3 text-left">
+                        Repuesto
+                    </th>
+                    <th class="border-b border-slate-700 p-3 text-left">
+                        Cantidad
+                    </th>
+                    <th class="border-b border-slate-700 p-3 text-left">
+                        Precio unitario
+                    </th>
+                    <th class="border-b border-slate-700 p-3 text-left">
+                        Subtotal
+                    </th>
+                    <th class="border-b border-slate-700 p-3"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="detalle in servicio.detalles" :key="detalle.id">
-                    <td>{{ detalle.repuesto.nombre }}</td>
-                    <td>{{ detalle.cantidad }}</td>
-                    <td>
+                    <td class="border-b border-slate-700 p-3">
+                        {{ detalle.repuesto.nombre }}
+                    </td>
+                    <td class="border-b border-slate-700 p-3">
+                        {{ detalle.cantidad }}
+                    </td>
+                    <td class="border-b border-slate-700 p-3">
                         ${{
                             Number(detalle.precio_unitario).toLocaleString(
                                 'es-CO',
                             )
                         }}
                     </td>
-                    <td>
+                    <td class="border-b border-slate-700 p-3">
                         ${{
                             (
                                 detalle.cantidad * detalle.precio_unitario
                             ).toLocaleString('es-CO')
                         }}
                     </td>
-                    <td>
-                        <button
-                            class="btn btn-sm btn-danger"
-                            @click="quitarRepuesto(detalle)"
+                    <td class="border-b border-slate-700 p-3">
+                        <AppButton
+                            size="sm"
+                            variant="danger"
+                            @click="confirmarQuitar(detalle)"
                         >
                             Quitar
-                        </button>
+                        </AppButton>
                     </td>
                 </tr>
                 <tr v-if="servicio.detalles.length === 0">
-                    <td colspan="5" class="empty">
+                    <td colspan="5" class="p-3 text-center text-slate-400">
                         No se han agregado repuestos a este servicio.
                     </td>
                 </tr>
             </tbody>
         </table>
 
-        <p class="costo-total">
+        <p class="mb-6 text-lg text-slate-100">
             Costo total:
             <strong
                 >${{
@@ -216,8 +246,14 @@ function quitarRepuesto(detalle) {
             >
         </p>
 
-        <form @submit.prevent="agregarRepuesto" class="add-repuesto-form">
-            <select v-model="repuestoForm.repuesto_id">
+        <form
+            @submit.prevent="agregarRepuesto"
+            class="flex max-w-lg items-start gap-2"
+        >
+            <select
+                v-model="repuestoForm.repuesto_id"
+                :class="[inputClasses, 'flex-1']"
+            >
                 <option value="">-- Selecciona un repuesto --</option>
                 <option
                     v-for="repuesto in repuestos"
@@ -232,124 +268,35 @@ function quitarRepuesto(detalle) {
                 min="1"
                 v-model="repuestoForm.cantidad"
                 placeholder="Cantidad"
+                :class="[inputClasses, 'w-28']"
             />
-            <button
+            <AppButton
                 type="submit"
-                class="btn btn-primary"
+                variant="primary"
                 :disabled="repuestoForm.processing"
             >
                 Agregar
-            </button>
+            </AppButton>
         </form>
-        <span v-if="repuestoForm.errors.repuesto_id" class="error">{{
-            repuestoForm.errors.repuesto_id
-        }}</span>
-        <span v-if="repuestoForm.errors.cantidad" class="error">{{
-            repuestoForm.errors.cantidad
-        }}</span>
+        <span
+            v-if="repuestoForm.errors.repuesto_id"
+            class="mt-2 block text-sm text-red-400"
+        >
+            {{ repuestoForm.errors.repuesto_id }}
+        </span>
+        <span
+            v-if="repuestoForm.errors.cantidad"
+            class="mt-1 block text-sm text-red-400"
+        >
+            {{ repuestoForm.errors.cantidad }}
+        </span>
+
+        <ConfirmDialog
+            :show="!!detalleAQuitar"
+            title="Quitar repuesto"
+            :message="`¿Quitar ${detalleAQuitar?.repuesto?.nombre} de este servicio? El stock se devolverá automáticamente.`"
+            @confirm="quitarRepuesto"
+            @cancel="detalleAQuitar = null"
+        />
     </AppLayout>
 </template>
-
-<style scoped>
-.form {
-    max-width: 480px;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-.field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-}
-.field input,
-.field select,
-.field textarea {
-    padding: 0.55rem;
-    border-radius: 6px;
-    border: 1px solid #334155;
-    background: #0f172a;
-    color: #e2e8f0;
-    font-family: inherit;
-}
-.error {
-    color: #f87171;
-    font-size: 0.85rem;
-}
-.actions {
-    display: flex;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
-}
-.btn {
-    display: inline-block;
-    padding: 0.55rem 1rem;
-    border-radius: 6px;
-    border: 1px solid #475569;
-    background: transparent;
-    color: #e2e8f0;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 0.9rem;
-}
-.btn-primary {
-    background: #3b82f6;
-    border-color: #3b82f6;
-    color: white;
-}
-.btn-sm {
-    padding: 0.3rem 0.6rem;
-    font-size: 0.8rem;
-}
-.btn-danger {
-    border-color: #b91c1c;
-    color: #fca5a5;
-}
-.divider {
-    border: none;
-    border-top: 1px solid #334155;
-    margin: 2rem 0;
-}
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1rem;
-    max-width: 640px;
-}
-.table th,
-.table td {
-    padding: 0.6rem;
-    border-bottom: 1px solid #334155;
-    text-align: left;
-}
-.empty {
-    text-align: center;
-    color: #94a3b8;
-}
-.costo-total {
-    font-size: 1.05rem;
-    margin-bottom: 1.5rem;
-}
-.add-repuesto-form {
-    display: flex;
-    gap: 0.5rem;
-    max-width: 480px;
-    align-items: center;
-}
-.add-repuesto-form select {
-    flex: 2;
-    padding: 0.55rem;
-    border-radius: 6px;
-    border: 1px solid #334155;
-    background: #0f172a;
-    color: #e2e8f0;
-}
-.add-repuesto-form input {
-    flex: 1;
-    padding: 0.55rem;
-    border-radius: 6px;
-    border: 1px solid #334155;
-    background: #0f172a;
-    color: #e2e8f0;
-}
-</style>

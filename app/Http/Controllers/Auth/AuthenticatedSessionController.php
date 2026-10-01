@@ -23,7 +23,14 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('clientes.index'));
+        $usuario = $request->user();
+        $soloMecanico = $usuario->esMecanico()
+            && ! $usuario->esAdmin()
+            && ! $usuario->esRecepcionista();
+
+        return redirect()->intended(
+            $soloMecanico ? route('servicios.index') : route('dashboard'),
+        );
     }
 
     public function destroy(Request $request): RedirectResponse

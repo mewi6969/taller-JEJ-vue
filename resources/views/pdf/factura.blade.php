@@ -38,7 +38,7 @@
             </tr>
             @foreach ($factura->servicio->detalles as $detalle)
                 <tr>
-                    <td>{{ $detalle->repuesto->nombre }} (x{{ $detalle->cantidad }})</td>
+                    <td>{{ $detalle->repuesto?->nombre ?? 'Repuesto eliminado' }} (x{{ $detalle->cantidad }})</td>
                     <td>${{ number_format($detalle->cantidad * $detalle->precio_unitario, 2) }}</td>
                 </tr>
             @endforeach
