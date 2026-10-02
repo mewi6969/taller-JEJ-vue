@@ -33,12 +33,30 @@ class RepuestoController extends Controller
     {
         $this->authorize('create', Repuesto::class);
 
-        return Inertia::render('repuestos/Create');
+        return Inertia::render('repuestos/Create', [
+            'existentes' => Repuesto::orderBy('nombre')
+                ->get(['id', 'nombre', 'descripcion', 'precio', 'cantidad', 'cantidad_minima']),
+        ]);
     }
 
     public function store(StoreRepuestoRequest $request): RedirectResponse
     {
-        Repuesto::create($request->validated());
+        $datos = $request->validated();
+        $nombre = trim($request->string('nombre')->toString());
+
+        $existente = Repuesto::query()
+            ->whereRaw('lower(nombre) = ?', [mb_strtolower($nombre)])
+            ->first();
+
+        if ($existente !== null) {
+            $cantidad = $request->integer('cantidad');
+            $existente->increment('cantidad', $cantidad);
+
+            return redirect()->route('repuestos.index')
+                ->with('success', "Se sumaron {$cantidad} unidades al repuesto existente \"{$existente->nombre}\".");
+        }
+
+        Repuesto::create($datos);
 
         return redirect()->route('repuestos.index')
             ->with('success', 'Repuesto creado correctamente.');
