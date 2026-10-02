@@ -63,7 +63,7 @@ Facturación con número consecutivo, estado de pago y descarga en PDF.
 - Correo automático al cliente cuando su servicio se marca como terminado
 - Eliminación lógica (soft deletes) en todos los módulos
 - Un mecánico solo ve los servicios que tiene asignados; puede recibir permiso especial para crear servicios
-- Suite de pruebas automatizadas con Pest (61 tests / 173 aserciones)
+- Suite de pruebas automatizadas con Pest (64 tests / 187 aserciones)
 
 ## Instalación
 
