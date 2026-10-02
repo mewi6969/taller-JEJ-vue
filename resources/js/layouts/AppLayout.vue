@@ -14,6 +14,7 @@ const links = [
     { href: '/motocicletas', label: 'Motocicletas' },
     { href: '/repuestos', label: 'Repuestos' },
     { href: '/servicios', label: 'Servicios' },
+    { href: '/calendario', label: 'Calendario' },
     { href: '/facturas', label: 'Facturas' },
     { href: '/usuarios', label: 'Usuarios' },
 ];

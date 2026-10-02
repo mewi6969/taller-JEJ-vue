@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FacturaController;
@@ -27,6 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('repuestos', RepuestoController::class)->except(['show']);
     Route::resource('servicios', ServicioController::class)->except(['show']);
     Route::resource('usuarios', UserController::class)->except(['show']);
+
+    Route::get('calendario', [CalendarioController::class, 'index'])->name('calendario');
 
     Route::post('servicios/{servicio}/repuestos', [ServicioController::class, 'agregarRepuesto'])
         ->name('servicios.repuestos.store');
