@@ -96,7 +96,10 @@
     font-size: 1.125rem;
     font-weight: 600;
     color: #f8fafc;
-    text-transform: capitalize;
+}
+
+.fc .fc-toolbar-title::first-letter {
+    text-transform: uppercase;
 }
 
 .fc .fc-button {
