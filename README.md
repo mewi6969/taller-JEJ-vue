@@ -4,16 +4,30 @@ Aplicación web para la administración de clientes, servicios e inventario en u
 
 > Proyecto de grado — Tecnología en Desarrollo de Software, Corporación Universitaria para el Desarrollo Empresarial y Social Misión Paz.
 
-## Capturas
+## Capturas de pantalla
 
-<!--
-TODO: agregar capturas de pantalla o un GIF del flujo principal aquí.
-Sugerencia de flujo a grabar: login -> listado de clientes -> crear un servicio -> agregar un repuesto -> ver el costo actualizado.
-Puedes usar ScreenToGif o el Snipping Tool de Windows para grabar el GIF.
+### Dashboard
+Resumen de la actividad del taller: servicios por estado, ingresos del mes, repuestos en bajo stock y carga de trabajo de los mecánicos.
 
-![Login](docs/screenshots/login.png)
-![Listado de servicios](docs/screenshots/servicios.png)
--->
+![Dashboard](docs/dashboard.png)
+
+### Calendario de disponibilidad
+Cada barra va desde el ingreso hasta la entrega del servicio, con el color de su estado.
+
+![Calendario](docs/calendario.png)
+
+### Servicios
+Órdenes de trabajo con su mecánico, estado y costo total.
+
+![Servicios](docs/servicios.png)
+
+### Facturas
+Facturación con número consecutivo, estado de pago y descarga en PDF.
+
+![Facturas](docs/facturas.png)
+
+### Clientes
+![Clientes](docs/clientes.png)
 
 ## Stack tecnológico
 
