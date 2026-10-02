@@ -56,9 +56,9 @@ onBeforeUnmount(() => clearTimeout(temporizador));
 </script>
 
 <template>
-    <div class="min-h-screen bg-fondo text-slate-200">
+    <div class="bg-fondo min-h-screen text-slate-200">
         <nav
-            class="sticky top-0 z-40 border-b border-linea bg-superficie/90 backdrop-blur"
+            class="border-linea bg-superficie/90 sticky top-0 z-40 border-b backdrop-blur"
         >
             <div
                 class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-y-2 px-6 py-3"
@@ -84,7 +84,7 @@ onBeforeUnmount(() => clearTimeout(temporizador));
                         :class="
                             isActive(link.href)
                                 ? 'bg-amber-500/10 text-amber-400'
-                                : 'text-slate-400 hover:bg-superficie-alta hover:text-slate-100'
+                                : 'hover:bg-superficie-alta text-slate-400 hover:text-slate-100'
                         "
                     >
                         {{ link.label }}
@@ -92,7 +92,7 @@ onBeforeUnmount(() => clearTimeout(temporizador));
                 </div>
 
                 <button
-                    class="rounded-md border border-linea px-3 py-1.5 text-sm text-slate-200 transition-colors hover:bg-superficie-alta"
+                    class="border-linea hover:bg-superficie-alta rounded-md border px-3 py-1.5 text-sm text-slate-200 transition-colors"
                     @click="logout"
                 >
                     Salir

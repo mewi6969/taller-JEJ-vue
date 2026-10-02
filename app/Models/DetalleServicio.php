@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\DetalleServicioFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DetalleServicio extends Model
 {
+    /** @use HasFactory<DetalleServicioFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -35,11 +37,17 @@ class DetalleServicio extends Model
         });
     }
 
+    /**
+     * @return BelongsTo<Servicio, $this>
+     */
     public function servicio(): BelongsTo
     {
         return $this->belongsTo(Servicio::class);
     }
 
+    /**
+     * @return BelongsTo<Repuesto, $this>
+     */
     public function repuesto(): BelongsTo
     {
         return $this->belongsTo(Repuesto::class)->withTrashed();

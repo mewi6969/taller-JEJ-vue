@@ -3,8 +3,12 @@
 namespace Database\Factories;
 
 use App\Models\Cliente;
+use App\Models\Motocicleta;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends Factory<Motocicleta>
+ */
 class MotocicletaFactory extends Factory
 {
     public function definition(): array

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Cliente;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreClienteRequest extends FormRequest
@@ -12,6 +13,9 @@ class StoreClienteRequest extends FormRequest
         return $this->user()->can('create', Cliente::class);
     }
 
+    /**
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         return [

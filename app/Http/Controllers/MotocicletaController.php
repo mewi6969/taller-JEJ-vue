@@ -6,6 +6,7 @@ use App\Http\Requests\StoreMotocicletaRequest;
 use App\Http\Requests\UpdateMotocicletaRequest;
 use App\Models\Cliente;
 use App\Models\Motocicleta;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -41,7 +42,7 @@ class MotocicletaController extends Controller
         ]);
     }
 
-    public function store(StoreMotocicletaRequest $request)
+    public function store(StoreMotocicletaRequest $request): RedirectResponse
     {
         Motocicleta::create($request->validated());
 
@@ -59,7 +60,7 @@ class MotocicletaController extends Controller
         ]);
     }
 
-    public function update(UpdateMotocicletaRequest $request, Motocicleta $motocicleta)
+    public function update(UpdateMotocicletaRequest $request, Motocicleta $motocicleta): RedirectResponse
     {
         $motocicleta->update($request->validated());
 
@@ -67,7 +68,7 @@ class MotocicletaController extends Controller
             ->with('success', 'Motocicleta actualizada correctamente.');
     }
 
-    public function destroy(Motocicleta $motocicleta)
+    public function destroy(Motocicleta $motocicleta): RedirectResponse
     {
         $this->authorize('delete', $motocicleta);
 

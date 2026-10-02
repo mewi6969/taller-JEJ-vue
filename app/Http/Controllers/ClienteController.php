@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreClienteRequest;
 use App\Http\Requests\UpdateClienteRequest;
 use App\Models\Cliente;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -37,7 +38,7 @@ class ClienteController extends Controller
         return Inertia::render('clientes/Create');
     }
 
-    public function store(StoreClienteRequest $request)
+    public function store(StoreClienteRequest $request): RedirectResponse
     {
         Cliente::create($request->validated());
 
@@ -54,7 +55,7 @@ class ClienteController extends Controller
         ]);
     }
 
-    public function update(UpdateClienteRequest $request, Cliente $cliente)
+    public function update(UpdateClienteRequest $request, Cliente $cliente): RedirectResponse
     {
         $cliente->update($request->validated());
 
@@ -62,7 +63,7 @@ class ClienteController extends Controller
             ->with('success', 'Cliente actualizado correctamente.');
     }
 
-    public function destroy(Cliente $cliente)
+    public function destroy(Cliente $cliente): RedirectResponse
     {
         $this->authorize('delete', $cliente);
 

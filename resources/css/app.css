@@ -36,16 +36,16 @@
 @layer components {
     /* Tarjeta */
     .panel {
-        @apply overflow-hidden rounded-xl border border-linea bg-superficie shadow-lg shadow-black/20;
+        @apply border-linea bg-superficie overflow-hidden rounded-xl border shadow-lg shadow-black/20;
     }
 
     /* Campos de formulario */
     .campo {
-        @apply w-full rounded-lg border border-linea bg-fondo px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 transition;
+        @apply border-linea bg-fondo w-full rounded-lg border px-3 py-2 text-sm text-slate-100 transition placeholder:text-slate-500;
     }
 
     .campo:focus {
-        @apply border-amber-500 outline-none ring-2 ring-amber-500/30;
+        @apply border-amber-500 ring-2 ring-amber-500/30 outline-none;
     }
 
     /* Tabla */
@@ -54,7 +54,7 @@
     }
 
     .tabla thead th {
-        @apply border-b border-linea bg-superficie-alta px-4 py-3 text-xs font-semibold tracking-wider text-slate-400 uppercase;
+        @apply border-linea bg-superficie-alta border-b px-4 py-3 text-xs font-semibold tracking-wider text-slate-400 uppercase;
     }
 
     .tabla tbody td {
@@ -62,7 +62,7 @@
     }
 
     .tabla tbody tr {
-        @apply border-b border-linea/60 transition-colors last:border-b-0;
+        @apply border-linea/60 border-b transition-colors last:border-b-0;
     }
 
     .tabla tbody tr:nth-child(even) {

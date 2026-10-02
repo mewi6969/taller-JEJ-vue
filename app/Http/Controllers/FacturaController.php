@@ -45,7 +45,7 @@ class FacturaController extends Controller
     {
         $this->authorize('create', Factura::class);
 
-        $servicio = Servicio::findOrFail($request->servicio_id);
+        $servicio = Servicio::findOrFail($request->integer('servicio_id'));
         $descuento = $request->descuento ?? 0;
 
         Factura::create([

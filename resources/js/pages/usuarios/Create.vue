@@ -39,11 +39,7 @@ function submit() {
             <form @submit.prevent="submit" class="panel">
                 <div class="grid gap-5 p-6 sm:grid-cols-2">
                     <FormField label="Nombre" :error="form.errors.name">
-                        <input
-                            type="text"
-                            v-model="form.name"
-                            class="campo"
-                        />
+                        <input type="text" v-model="form.name" class="campo" />
                     </FormField>
 
                     <FormField label="Email" :error="form.errors.email">
@@ -54,10 +50,7 @@ function submit() {
                         />
                     </FormField>
 
-                    <FormField
-                        label="Contraseña"
-                        :error="form.errors.password"
-                    >
+                    <FormField label="Contraseña" :error="form.errors.password">
                         <input
                             type="password"
                             v-model="form.password"
@@ -93,7 +86,7 @@ function submit() {
 
                     <label
                         v-if="form.rol === 'mecanico'"
-                        class="flex cursor-pointer items-start gap-3 rounded-lg border border-linea bg-fondo/50 p-4 sm:col-span-2"
+                        class="border-linea bg-fondo/50 flex cursor-pointer items-start gap-3 rounded-lg border p-4 sm:col-span-2"
                     >
                         <input
                             type="checkbox"
@@ -101,7 +94,9 @@ function submit() {
                             class="mt-0.5 h-4 w-4 accent-amber-500"
                         />
                         <span>
-                            <span class="block text-sm font-medium text-slate-200">
+                            <span
+                                class="block text-sm font-medium text-slate-200"
+                            >
                                 Puede crear servicios
                             </span>
                             <span class="block text-xs text-slate-500">
@@ -114,7 +109,7 @@ function submit() {
 
                 <!-- Pie con botones -->
                 <div
-                    class="flex justify-end gap-3 border-t border-linea bg-superficie-alta/40 px-6 py-4"
+                    class="border-linea bg-superficie-alta/40 flex justify-end gap-3 border-t px-6 py-4"
                 >
                     <AppButton href="/usuarios">Cancelar</AppButton>
                     <AppButton

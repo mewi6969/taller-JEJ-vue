@@ -103,7 +103,7 @@ class ServicioController extends Controller
             'cantidad' => ['required', 'integer', 'min:1'],
         ]);
 
-        $repuesto = Repuesto::findOrFail($data['repuesto_id']);
+        $repuesto = Repuesto::findOrFail((int) $data['repuesto_id']);
 
         if ($data['cantidad'] > $repuesto->cantidad) {
             return back()->withErrors(['cantidad' => 'No hay suficiente stock disponible.']);

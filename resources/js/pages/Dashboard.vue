@@ -109,7 +109,8 @@ const tarjetas = computed(() => {
             titulo: 'Repuestos en bajo stock',
             valor: props.total_bajo_stock,
             detalle: 'Necesitan reposición',
-            color: props.total_bajo_stock > 0 ? 'text-red-400' : 'text-slate-200',
+            color:
+                props.total_bajo_stock > 0 ? 'text-red-400' : 'text-slate-200',
         },
     );
 
@@ -135,11 +136,20 @@ const tarjetas = computed(() => {
 
         <!-- Tarjetas de resumen -->
         <div class="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <div v-for="tarjeta in tarjetas" :key="tarjeta.titulo" class="panel p-5">
-                <p class="text-xs font-semibold tracking-wider text-slate-400 uppercase">
+            <div
+                v-for="tarjeta in tarjetas"
+                :key="tarjeta.titulo"
+                class="panel p-5"
+            >
+                <p
+                    class="text-xs font-semibold tracking-wider text-slate-400 uppercase"
+                >
                     {{ tarjeta.titulo }}
                 </p>
-                <p class="mt-2 text-3xl font-semibold tabular-nums" :class="tarjeta.color">
+                <p
+                    class="mt-2 text-3xl font-semibold tabular-nums"
+                    :class="tarjeta.color"
+                >
                     {{ tarjeta.valor }}
                 </p>
                 <p class="mt-1 text-xs text-slate-500">{{ tarjeta.detalle }}</p>
@@ -149,7 +159,9 @@ const tarjetas = computed(() => {
         <div class="mb-6 grid gap-6 lg:grid-cols-3">
             <!-- Servicios por mes -->
             <div class="panel p-6 lg:col-span-2">
-                <h2 class="text-sm font-semibold text-slate-100">Servicios por mes</h2>
+                <h2 class="text-sm font-semibold text-slate-100">
+                    Servicios por mes
+                </h2>
                 <p class="mb-6 text-xs text-slate-500">Últimos 6 meses</p>
 
                 <div class="flex h-44 items-end gap-3">
@@ -158,7 +170,9 @@ const tarjetas = computed(() => {
                         :key="mes.etiqueta"
                         class="flex h-full flex-1 flex-col items-center justify-end gap-2"
                     >
-                        <span class="text-xs font-semibold text-slate-300 tabular-nums">
+                        <span
+                            class="text-xs font-semibold text-slate-300 tabular-nums"
+                        >
                             {{ mes.total }}
                         </span>
                         <div
@@ -167,15 +181,21 @@ const tarjetas = computed(() => {
                                 height: `${Math.max((mes.total / maxMes) * 100, 3)}%`,
                             }"
                         />
-                        <span class="text-xs text-slate-400">{{ mes.etiqueta }}</span>
+                        <span class="text-xs text-slate-400">{{
+                            mes.etiqueta
+                        }}</span>
                     </div>
                 </div>
             </div>
 
             <!-- Servicios por estado -->
             <div class="panel p-6">
-                <h2 class="text-sm font-semibold text-slate-100">Servicios por estado</h2>
-                <p class="mb-6 text-xs text-slate-500">{{ totalServicios }} en total</p>
+                <h2 class="text-sm font-semibold text-slate-100">
+                    Servicios por estado
+                </h2>
+                <p class="mb-6 text-xs text-slate-500">
+                    {{ totalServicios }} en total
+                </p>
 
                 <div class="space-y-4">
                     <div v-for="item in estados" :key="item.estado">
@@ -183,11 +203,15 @@ const tarjetas = computed(() => {
                             <span class="text-slate-300">
                                 {{ estadoLabels[item.estado] }}
                             </span>
-                            <span class="font-semibold text-slate-100 tabular-nums">
+                            <span
+                                class="font-semibold text-slate-100 tabular-nums"
+                            >
                                 {{ item.total }}
                             </span>
                         </div>
-                        <div class="h-2 overflow-hidden rounded-full bg-superficie-alta">
+                        <div
+                            class="bg-superficie-alta h-2 overflow-hidden rounded-full"
+                        >
                             <div
                                 class="h-full rounded-full"
                                 :class="estadoBarras[item.estado]"
@@ -203,9 +227,14 @@ const tarjetas = computed(() => {
 
         <div class="grid gap-6 lg:grid-cols-3">
             <!-- Últimos servicios -->
-            <div class="panel" :class="solo_mecanico ? 'lg:col-span-3' : 'lg:col-span-2'">
-                <div class="border-b border-linea px-6 py-4">
-                    <h2 class="text-sm font-semibold text-slate-100">Últimos servicios</h2>
+            <div
+                class="panel"
+                :class="solo_mecanico ? 'lg:col-span-3' : 'lg:col-span-2'"
+            >
+                <div class="border-linea border-b px-6 py-4">
+                    <h2 class="text-sm font-semibold text-slate-100">
+                        Últimos servicios
+                    </h2>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="tabla">
@@ -218,7 +247,10 @@ const tarjetas = computed(() => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="servicio in recientes" :key="servicio.id">
+                            <tr
+                                v-for="servicio in recientes"
+                                :key="servicio.id"
+                            >
                                 <td>
                                     <span
                                         class="rounded-md border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 font-mono text-xs font-semibold tracking-widest text-amber-400 uppercase"
@@ -230,7 +262,11 @@ const tarjetas = computed(() => {
                                     {{ servicio.cliente }}
                                 </td>
                                 <td>
-                                    <AppBadge :variant="estadoVariants[servicio.estado]">
+                                    <AppBadge
+                                        :variant="
+                                            estadoVariants[servicio.estado]
+                                        "
+                                    >
                                         {{ estadoLabels[servicio.estado] }}
                                     </AppBadge>
                                 </td>
@@ -239,7 +275,10 @@ const tarjetas = computed(() => {
                                 </td>
                             </tr>
                             <tr v-if="recientes.length === 0">
-                                <td colspan="4" class="py-10 text-center text-slate-400">
+                                <td
+                                    colspan="4"
+                                    class="py-10 text-center text-slate-400"
+                                >
                                     Aún no hay servicios registrados.
                                 </td>
                             </tr>
@@ -258,7 +297,7 @@ const tarjetas = computed(() => {
                         <button
                             v-if="total_bajo_stock > 0"
                             type="button"
-                            class="rounded-md border border-linea px-2.5 py-1 text-xs font-medium text-amber-400 transition-colors hover:bg-superficie-alta"
+                            class="border-linea hover:bg-superficie-alta rounded-md border px-2.5 py-1 text-xs font-medium text-amber-400 transition-colors"
                             @click="mostrarBajoStock = true"
                         >
                             Ver todos ({{ total_bajo_stock }})
@@ -270,8 +309,12 @@ const tarjetas = computed(() => {
                             :key="repuesto.id"
                             class="flex items-center justify-between text-sm"
                         >
-                            <span class="text-slate-300">{{ repuesto.nombre }}</span>
-                            <span class="font-semibold text-red-400 tabular-nums">
+                            <span class="text-slate-300">{{
+                                repuesto.nombre
+                            }}</span>
+                            <span
+                                class="font-semibold text-red-400 tabular-nums"
+                            >
                                 {{ repuesto.cantidad }}
                                 <span class="font-normal text-slate-500">
                                     / mín. {{ repuesto.cantidad_minima }}
@@ -294,12 +337,18 @@ const tarjetas = computed(() => {
                     <ul v-if="mecanicos.length" class="space-y-4">
                         <li v-for="mecanico in mecanicos" :key="mecanico.id">
                             <div class="mb-1.5 flex justify-between text-sm">
-                                <span class="text-slate-300">{{ mecanico.name }}</span>
-                                <span class="font-semibold text-slate-100 tabular-nums">
+                                <span class="text-slate-300">{{
+                                    mecanico.name
+                                }}</span>
+                                <span
+                                    class="font-semibold text-slate-100 tabular-nums"
+                                >
                                     {{ mecanico.activos }}
                                 </span>
                             </div>
-                            <div class="h-2 overflow-hidden rounded-full bg-superficie-alta">
+                            <div
+                                class="bg-superficie-alta h-2 overflow-hidden rounded-full"
+                            >
                                 <div
                                     class="h-full rounded-full bg-amber-500"
                                     :style="{
@@ -323,7 +372,9 @@ const tarjetas = computed(() => {
             @click.self="mostrarBajoStock = false"
         >
             <div class="panel flex max-h-[80vh] w-full max-w-lg flex-col">
-                <div class="flex items-start justify-between gap-4 border-b border-linea px-6 py-4">
+                <div
+                    class="border-linea flex items-start justify-between gap-4 border-b px-6 py-4"
+                >
                     <div>
                         <h2 class="text-base font-semibold text-slate-50">
                             Repuestos en bajo stock
@@ -335,7 +386,7 @@ const tarjetas = computed(() => {
                     </div>
                     <button
                         type="button"
-                        class="rounded-md px-2 py-1 text-slate-400 transition-colors hover:bg-superficie-alta hover:text-slate-100"
+                        class="hover:bg-superficie-alta rounded-md px-2 py-1 text-slate-400 transition-colors hover:text-slate-100"
                         aria-label="Cerrar"
                         @click="mostrarBajoStock = false"
                     >
@@ -343,17 +394,21 @@ const tarjetas = computed(() => {
                     </button>
                 </div>
 
-                <ul class="divide-y divide-linea overflow-y-auto">
+                <ul class="divide-linea divide-y overflow-y-auto">
                     <li
                         v-for="repuesto in bajo_stock"
                         :key="repuesto.id"
                         class="flex items-center justify-between gap-4 px-6 py-3 text-sm"
                     >
                         <div>
-                            <p class="font-medium text-slate-50">{{ repuesto.nombre }}</p>
+                            <p class="font-medium text-slate-50">
+                                {{ repuesto.nombre }}
+                            </p>
                             <p class="text-xs text-slate-400">
                                 Quedan
-                                <span class="font-semibold text-red-400 tabular-nums">
+                                <span
+                                    class="font-semibold text-red-400 tabular-nums"
+                                >
                                     {{ repuesto.cantidad }}
                                 </span>
                                 · mínimo {{ repuesto.cantidad_minima }}
@@ -361,7 +416,7 @@ const tarjetas = computed(() => {
                         </div>
                         <Link
                             :href="`/repuestos/${repuesto.id}/edit`"
-                            class="shrink-0 rounded-md border border-linea px-3 py-1.5 text-xs font-medium text-slate-100 transition-colors hover:bg-superficie-alta"
+                            class="border-linea hover:bg-superficie-alta shrink-0 rounded-md border px-3 py-1.5 text-xs font-medium text-slate-100 transition-colors"
                         >
                             Reponer
                         </Link>

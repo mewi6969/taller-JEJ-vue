@@ -53,7 +53,9 @@ function submit() {
             <!-- Resumen de la factura -->
             <div class="panel mb-6 grid gap-5 p-6 sm:grid-cols-3">
                 <div>
-                    <p class="text-xs font-semibold tracking-wider text-slate-400 uppercase">
+                    <p
+                        class="text-xs font-semibold tracking-wider text-slate-400 uppercase"
+                    >
                         Cliente
                     </p>
                     <p class="mt-1 font-medium text-slate-50">
@@ -62,7 +64,9 @@ function submit() {
                     </p>
                 </div>
                 <div>
-                    <p class="text-xs font-semibold tracking-wider text-slate-400 uppercase">
+                    <p
+                        class="text-xs font-semibold tracking-wider text-slate-400 uppercase"
+                    >
                         Motocicleta
                     </p>
                     <p class="mt-1">
@@ -74,10 +78,14 @@ function submit() {
                     </p>
                 </div>
                 <div>
-                    <p class="text-xs font-semibold tracking-wider text-slate-400 uppercase">
+                    <p
+                        class="text-xs font-semibold tracking-wider text-slate-400 uppercase"
+                    >
                         Total
                     </p>
-                    <p class="mt-1 text-xl font-semibold text-slate-50 tabular-nums">
+                    <p
+                        class="mt-1 text-xl font-semibold text-slate-50 tabular-nums"
+                    >
                         ${{ Number(factura.total).toLocaleString('es-CO') }}
                     </p>
                 </div>
@@ -94,7 +102,9 @@ function submit() {
                                 <option value="anulada">Anulada</option>
                             </select>
                         </FormField>
-                        <div class="mt-2 flex items-center gap-2 text-xs text-slate-500">
+                        <div
+                            class="mt-2 flex items-center gap-2 text-xs text-slate-500"
+                        >
                             Estado actual:
                             <AppBadge :variant="badgeVariant(factura.estado)">
                                 <span class="capitalize">
@@ -134,7 +144,7 @@ function submit() {
 
                 <!-- Pie con botones -->
                 <div
-                    class="flex justify-end gap-3 border-t border-linea bg-superficie-alta/40 px-6 py-4"
+                    class="border-linea bg-superficie-alta/40 flex justify-end gap-3 border-t px-6 py-4"
                 >
                     <AppButton href="/facturas">Cancelar</AppButton>
                     <AppButton

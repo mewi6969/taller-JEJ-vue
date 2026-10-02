@@ -7,26 +7,31 @@ Aplicación web para la administración de clientes, servicios e inventario en u
 ## Capturas de pantalla
 
 ### Dashboard
+
 Resumen de la actividad del taller: servicios por estado, ingresos del mes, repuestos en bajo stock y carga de trabajo de los mecánicos.
 
 ![Dashboard](docs/dashboard.png)
 
 ### Calendario de disponibilidad
+
 Cada barra va desde el ingreso hasta la entrega del servicio, con el color de su estado.
 
 ![Calendario](docs/calendario.png)
 
 ### Servicios
+
 Órdenes de trabajo con su mecánico, estado y costo total.
 
 ![Servicios](docs/servicios.png)
 
 ### Facturas
+
 Facturación con número consecutivo, estado de pago y descarga en PDF.
 
 ![Facturas](docs/facturas.png)
 
 ### Clientes
+
 ![Clientes](docs/clientes.png)
 
 ## Stack tecnológico

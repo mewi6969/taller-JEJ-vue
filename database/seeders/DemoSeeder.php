@@ -217,7 +217,7 @@ class DemoSeeder extends Seeder
             'descuento' => $descuento,
             'total' => $servicio->costo_total - $descuento,
             'estado' => $datos['estado'],
-            'metodo_pago' => $pagada ? $datos['metodo'] : null,
+            'metodo_pago' => $pagada ? ($datos['metodo'] ?? null) : null,
             'fecha_pago' => $pagada ? $fecha->toDateString() : null,
             'created_at' => $fecha,
             'updated_at' => $fecha,

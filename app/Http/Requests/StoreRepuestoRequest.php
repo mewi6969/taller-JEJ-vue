@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Repuesto;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRepuestoRequest extends FormRequest
@@ -12,6 +13,9 @@ class StoreRepuestoRequest extends FormRequest
         return $this->user()->can('create', Repuesto::class);
     }
 
+    /**
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         return [

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\FacturaFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Factura extends Model
 {
+    /** @use HasFactory<FacturaFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
@@ -38,6 +40,9 @@ class Factura extends Model
         });
     }
 
+    /**
+     * @return BelongsTo<Servicio, $this>
+     */
     public function servicio(): BelongsTo
     {
         return $this->belongsTo(Servicio::class);

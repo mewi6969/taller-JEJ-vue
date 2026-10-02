@@ -20,7 +20,7 @@ function submit() {
     <Head title="Iniciar sesión" />
 
     <div
-        class="flex min-h-screen flex-col items-center justify-center bg-fondo bg-[radial-gradient(ellipse_at_top,rgba(245,158,11,0.14),transparent_60%)] px-4 py-10 text-slate-200"
+        class="bg-fondo flex min-h-screen flex-col items-center justify-center bg-[radial-gradient(ellipse_at_top,rgba(245,158,11,0.14),transparent_60%)] px-4 py-10 text-slate-200"
     >
         <!-- Marca -->
         <Link
@@ -118,7 +118,9 @@ function submit() {
                         class="w-full"
                         :disabled="form.processing"
                     >
-                        {{ form.processing ? 'Ingresando...' : 'Iniciar sesión' }}
+                        {{
+                            form.processing ? 'Ingresando...' : 'Iniciar sesión'
+                        }}
                     </AppButton>
                 </form>
             </div>

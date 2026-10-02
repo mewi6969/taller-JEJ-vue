@@ -59,27 +59,20 @@ function submit() {
                                     :key="cliente.id"
                                     :value="cliente.id"
                                 >
-                                    {{ cliente.nombre }} {{ cliente.apellido }}
-                                    — {{ cliente.documento }}
+                                    {{ cliente.nombre }}
+                                    {{ cliente.apellido }} —
+                                    {{ cliente.documento }}
                                 </option>
                             </select>
                         </FormField>
                     </div>
 
                     <FormField label="Placa" :error="form.errors.placa">
-                        <input
-                            type="text"
-                            v-model="form.placa"
-                            class="campo"
-                        />
+                        <input type="text" v-model="form.placa" class="campo" />
                     </FormField>
 
                     <FormField label="Marca" :error="form.errors.marca">
-                        <input
-                            type="text"
-                            v-model="form.marca"
-                            class="campo"
-                        />
+                        <input type="text" v-model="form.marca" class="campo" />
                     </FormField>
 
                     <FormField label="Modelo" :error="form.errors.modelo">
@@ -111,17 +104,13 @@ function submit() {
                     </FormField>
 
                     <FormField label="Color" :error="form.errors.color">
-                        <input
-                            type="text"
-                            v-model="form.color"
-                            class="campo"
-                        />
+                        <input type="text" v-model="form.color" class="campo" />
                     </FormField>
                 </div>
 
                 <!-- Pie con botones -->
                 <div
-                    class="flex justify-end gap-3 border-t border-linea bg-superficie-alta/40 px-6 py-4"
+                    class="border-linea bg-superficie-alta/40 flex justify-end gap-3 border-t px-6 py-4"
                 >
                     <AppButton href="/motocicletas">Cancelar</AppButton>
                     <AppButton

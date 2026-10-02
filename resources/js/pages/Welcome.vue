@@ -32,15 +32,17 @@ const anio = new Date().getFullYear();
 <template>
     <Head title="Taller JEJ" />
 
-    <div class="min-h-screen bg-fondo text-slate-200">
+    <div class="bg-fondo min-h-screen text-slate-200">
         <!-- Barra superior -->
         <header
-            class="sticky top-0 z-40 border-b border-linea bg-superficie/90 backdrop-blur"
+            class="border-linea bg-superficie/90 sticky top-0 z-40 border-b backdrop-blur"
         >
             <div
                 class="mx-auto flex max-w-6xl items-center justify-between px-6 py-3"
             >
-                <div class="flex items-center gap-2 font-bold tracking-tight text-white">
+                <div
+                    class="flex items-center gap-2 font-bold tracking-tight text-white"
+                >
                     <span
                         class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500 text-sm font-extrabold text-slate-900"
                     >
@@ -54,7 +56,7 @@ const anio = new Date().getFullYear();
 
         <!-- Portada -->
         <section
-            class="border-b border-linea bg-[radial-gradient(ellipse_at_top,rgba(245,158,11,0.14),transparent_65%)]"
+            class="border-linea border-b bg-[radial-gradient(ellipse_at_top,rgba(245,158,11,0.14),transparent_65%)]"
         >
             <div class="mx-auto max-w-4xl px-6 py-24 text-center sm:py-32">
                 <p
@@ -112,8 +114,14 @@ const anio = new Date().getFullYear();
             </div>
         </section>
 
+        <section>
+            <div>
+                <h3 center>Contactanos</h3>
+            </div>
+        </section>
+
         <!-- Pie -->
-        <footer class="border-t border-linea">
+        <footer class="border-linea border-t">
             <div
                 class="mx-auto max-w-6xl px-6 py-6 text-center text-xs text-slate-500"
             >

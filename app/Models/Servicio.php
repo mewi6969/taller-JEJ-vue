@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Mail\ServicioTerminadoMail;
+use Database\Factories\ServicioFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 
 class Servicio extends Model
 {
+    /** @use HasFactory<ServicioFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
@@ -48,21 +50,33 @@ class Servicio extends Model
         });
     }
 
+    /**
+     * @return BelongsTo<Motocicleta, $this>
+     */
     public function motocicleta(): BelongsTo
     {
         return $this->belongsTo(Motocicleta::class);
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function mecanico(): BelongsTo
     {
         return $this->belongsTo(User::class, 'mecanico_id');
     }
 
+    /**
+     * @return HasMany<DetalleServicio, $this>
+     */
     public function detalles(): HasMany
     {
         return $this->hasMany(DetalleServicio::class);
     }
 
+    /**
+     * @return HasOne<Factura, $this>
+     */
     public function factura(): HasOne
     {
         return $this->hasOne(Factura::class);

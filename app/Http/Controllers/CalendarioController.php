@@ -34,7 +34,7 @@ class CalendarioController extends Controller
 
                 return [
                     'id' => $servicio->id,
-                    'placa' => $moto?->placa ?? 'Sin placa',
+                    'placa' => $moto->placa ?? 'Sin placa',
                     'cliente' => $cliente
                         ? $cliente->nombre.' '.$cliente->apellido
                         : 'Cliente eliminado',

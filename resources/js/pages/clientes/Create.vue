@@ -100,7 +100,7 @@ function submit() {
 
                 <!-- Pie con botones -->
                 <div
-                    class="flex justify-end gap-3 border-t border-linea bg-superficie-alta/40 px-6 py-4"
+                    class="border-linea bg-superficie-alta/40 flex justify-end gap-3 border-t px-6 py-4"
                 >
                     <AppButton href="/clientes">Cancelar</AppButton>
                     <AppButton

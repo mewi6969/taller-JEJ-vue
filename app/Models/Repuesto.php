@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\RepuestoFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Repuesto extends Model
 {
+    /** @use HasFactory<RepuestoFactory> */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [

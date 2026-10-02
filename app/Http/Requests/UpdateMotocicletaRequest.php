@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Motocicleta;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateMotocicletaRequest extends FormRequest
@@ -11,11 +13,17 @@ class UpdateMotocicletaRequest extends FormRequest
         return $this->user()->can('update', $this->route('motocicleta'));
     }
 
+    /**
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
+        /** @var Motocicleta $motocicleta */
+        $motocicleta = $this->route('motocicleta');
+
         return [
             'cliente_id' => 'required|exists:clientes,id',
-            'placa' => 'required|string|max:20|unique:motocicletas,placa,'.$this->route('motocicleta')->id,
+            'placa' => 'required|string|max:20|unique:motocicletas,placa,'.$motocicleta->id,
             'marca' => 'required|string|max:255',
             'modelo' => 'required|string|max:255',
             'anio' => 'nullable|integer|min:1980|max:'.(date('Y') + 1),

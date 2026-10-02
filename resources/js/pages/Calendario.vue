@@ -100,7 +100,10 @@ const opciones = computed(() => ({
             <FullCalendar :options="opciones" />
         </div>
 
-        <p v-if="servicios.length === 0" class="mt-4 text-center text-sm text-slate-500">
+        <p
+            v-if="servicios.length === 0"
+            class="mt-4 text-center text-sm text-slate-500"
+        >
             Aún no hay servicios para mostrar en el calendario.
         </p>
     </AppLayout>

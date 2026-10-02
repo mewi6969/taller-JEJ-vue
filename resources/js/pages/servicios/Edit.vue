@@ -185,7 +185,7 @@ function moneda(valor) {
 
                 <!-- Pie con botones -->
                 <div
-                    class="flex justify-end gap-3 border-t border-linea bg-superficie-alta/40 px-6 py-4"
+                    class="border-linea bg-superficie-alta/40 flex justify-end gap-3 border-t px-6 py-4"
                 >
                     <AppButton href="/servicios">Cancelar</AppButton>
                     <AppButton
@@ -200,12 +200,13 @@ function moneda(valor) {
 
             <!-- Tarjeta: repuestos usados -->
             <div class="panel">
-                <div class="border-b border-linea px-6 py-4">
+                <div class="border-linea border-b px-6 py-4">
                     <h2 class="text-base font-semibold text-slate-50">
                         Repuestos usados
                     </h2>
                     <p class="text-xs text-slate-400">
-                        Al agregar o quitar un repuesto, el stock se ajusta solo.
+                        Al agregar o quitar un repuesto, el stock se ajusta
+                        solo.
                     </p>
                 </div>
 
@@ -237,7 +238,9 @@ function moneda(valor) {
                                 <td class="tabular-nums">
                                     {{ moneda(detalle.precio_unitario) }}
                                 </td>
-                                <td class="font-semibold text-slate-100 tabular-nums">
+                                <td
+                                    class="font-semibold text-slate-100 tabular-nums"
+                                >
                                     {{
                                         moneda(
                                             detalle.cantidad *
@@ -272,10 +275,12 @@ function moneda(valor) {
 
                 <!-- Costo total -->
                 <div
-                    class="flex items-center justify-between border-t border-linea px-6 py-4"
+                    class="border-linea flex items-center justify-between border-t px-6 py-4"
                 >
                     <span class="text-sm text-slate-400">Costo total</span>
-                    <span class="text-xl font-semibold text-amber-400 tabular-nums">
+                    <span
+                        class="text-xl font-semibold text-amber-400 tabular-nums"
+                    >
                         {{ moneda(servicio.costo_total) }}
                     </span>
                 </div>
@@ -283,7 +288,7 @@ function moneda(valor) {
                 <!-- Agregar repuesto -->
                 <form
                     @submit.prevent="agregarRepuesto"
-                    class="border-t border-linea bg-superficie-alta/40 px-6 py-4"
+                    class="border-linea bg-superficie-alta/40 border-t px-6 py-4"
                 >
                     <p class="mb-3 text-sm font-medium text-slate-200">
                         Agregar repuesto
@@ -293,7 +298,9 @@ function moneda(valor) {
                             v-model="repuestoForm.repuesto_id"
                             class="campo min-w-48 flex-1"
                         >
-                            <option value="">-- Selecciona un repuesto --</option>
+                            <option value="">
+                                -- Selecciona un repuesto --
+                            </option>
                             <option
                                 v-for="repuesto in repuestos"
                                 :key="repuesto.id"

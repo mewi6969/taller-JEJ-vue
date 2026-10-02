@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Motocicleta;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreMotocicletaRequest extends FormRequest
@@ -12,6 +13,9 @@ class StoreMotocicletaRequest extends FormRequest
         return $this->user()->can('create', Motocicleta::class);
     }
 
+    /**
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         return [

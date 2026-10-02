@@ -75,7 +75,9 @@ function etiquetaPagina(link, index) {
                                 {{ factura.numero_factura }}
                             </td>
                             <td class="font-medium text-slate-50">
-                                {{ factura.servicio.motocicleta.cliente.nombre }}
+                                {{
+                                    factura.servicio.motocicleta.cliente.nombre
+                                }}
                                 {{
                                     factura.servicio.motocicleta.cliente
                                         .apellido
@@ -88,9 +90,13 @@ function etiquetaPagina(link, index) {
                                     {{ factura.servicio.motocicleta.placa }}
                                 </span>
                             </td>
-                            <td class="font-semibold text-slate-100 tabular-nums">
+                            <td
+                                class="font-semibold text-slate-100 tabular-nums"
+                            >
                                 ${{
-                                    Number(factura.total).toLocaleString('es-CO')
+                                    Number(factura.total).toLocaleString(
+                                        'es-CO',
+                                    )
                                 }}
                             </td>
                             <td>
@@ -107,7 +113,7 @@ function etiquetaPagina(link, index) {
                                     <a
                                         :href="`/facturas/${factura.id}/pdf`"
                                         target="_blank"
-                                        class="inline-flex items-center justify-center rounded-md border border-linea px-3 py-1.5 text-xs text-slate-100 transition-colors hover:bg-superficie-alta"
+                                        class="border-linea hover:bg-superficie-alta inline-flex items-center justify-center rounded-md border px-3 py-1.5 text-xs text-slate-100 transition-colors"
                                     >
                                         PDF
                                     </a>
@@ -141,7 +147,7 @@ function etiquetaPagina(link, index) {
 
             <!-- Pie: conteo + paginación -->
             <div
-                class="flex flex-col gap-3 border-t border-linea px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                class="border-linea flex flex-col gap-3 border-t px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
             >
                 <p class="text-sm text-slate-400">
                     <template v-if="facturas.total > 0">
@@ -163,14 +169,14 @@ function etiquetaPagina(link, index) {
                             :class="
                                 link.active
                                     ? 'border-amber-500 bg-amber-500 font-semibold text-slate-900'
-                                    : 'border-linea text-slate-300 hover:bg-superficie-alta'
+                                    : 'border-linea hover:bg-superficie-alta text-slate-300'
                             "
                         >
                             {{ etiquetaPagina(link, index) }}
                         </Link>
                         <span
                             v-else
-                            class="min-w-9 rounded-md border border-linea px-3 py-1.5 text-center text-sm text-slate-600"
+                            class="border-linea min-w-9 rounded-md border px-3 py-1.5 text-center text-sm text-slate-600"
                         >
                             {{ etiquetaPagina(link, index) }}
                         </span>

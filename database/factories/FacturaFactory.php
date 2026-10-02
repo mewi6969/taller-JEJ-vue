@@ -6,6 +6,9 @@ use App\Models\Factura;
 use App\Models\Servicio;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends Factory<Factura>
+ */
 class FacturaFactory extends Factory
 {
     protected $model = Factura::class;

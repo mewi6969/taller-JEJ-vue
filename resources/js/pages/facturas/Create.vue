@@ -79,16 +79,24 @@ function submit() {
                     <!-- Resumen del servicio elegido -->
                     <div
                         v-if="servicioSeleccionado"
-                        class="rounded-lg border border-linea bg-fondo/50 p-4 sm:col-span-2"
+                        class="border-linea bg-fondo/50 rounded-lg border p-4 sm:col-span-2"
                     >
                         <div class="flex items-center justify-between gap-4">
                             <div>
-                                <p class="text-xs font-semibold tracking-wider text-slate-400 uppercase">
+                                <p
+                                    class="text-xs font-semibold tracking-wider text-slate-400 uppercase"
+                                >
                                     Cliente
                                 </p>
                                 <p class="mt-1 font-medium text-slate-50">
-                                    {{ servicioSeleccionado.motocicleta.cliente.nombre }}
-                                    {{ servicioSeleccionado.motocicleta.cliente.apellido }}
+                                    {{
+                                        servicioSeleccionado.motocicleta.cliente
+                                            .nombre
+                                    }}
+                                    {{
+                                        servicioSeleccionado.motocicleta.cliente
+                                            .apellido
+                                    }}
                                 </p>
                             </div>
                             <span
@@ -97,11 +105,17 @@ function submit() {
                                 {{ servicioSeleccionado.motocicleta.placa }}
                             </span>
                             <div class="text-right">
-                                <p class="text-xs font-semibold tracking-wider text-slate-400 uppercase">
+                                <p
+                                    class="text-xs font-semibold tracking-wider text-slate-400 uppercase"
+                                >
                                     Costo del servicio
                                 </p>
-                                <p class="mt-1 text-lg font-semibold text-slate-50 tabular-nums">
-                                    {{ moneda(servicioSeleccionado.costo_total) }}
+                                <p
+                                    class="mt-1 text-lg font-semibold text-slate-50 tabular-nums"
+                                >
+                                    {{
+                                        moneda(servicioSeleccionado.costo_total)
+                                    }}
                                 </p>
                             </div>
                         </div>
@@ -125,7 +139,7 @@ function submit() {
 
                 <!-- Pie con botones -->
                 <div
-                    class="flex justify-end gap-3 border-t border-linea bg-superficie-alta/40 px-6 py-4"
+                    class="border-linea bg-superficie-alta/40 flex justify-end gap-3 border-t px-6 py-4"
                 >
                     <AppButton href="/facturas">Cancelar</AppButton>
                     <AppButton
@@ -133,7 +147,9 @@ function submit() {
                         variant="primary"
                         :disabled="form.processing || servicios.length === 0"
                     >
-                        {{ form.processing ? 'Generando...' : 'Generar factura' }}
+                        {{
+                            form.processing ? 'Generando...' : 'Generar factura'
+                        }}
                     </AppButton>
                 </div>
             </form>
