@@ -1,5 +1,7 @@
-<script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
+<script setup>
+import { Head } from '@inertiajs/vue3';
+
+import AppButton from '../components/AppButton.vue';
 
 const servicios = [
     {
@@ -20,192 +22,103 @@ const servicios = [
     {
         titulo: 'Diagnóstico especializado',
         descripcion:
-            'Revisión técnica completa antes de cualquier viaje largo o compra de segunda mano.',
+            'Revisión técnica completa para detectar fallas a tiempo y darte un presupuesto claro antes de empezar.',
     },
 ];
+
+const anio = new Date().getFullYear();
 </script>
 
 <template>
-    <div class="landing">
-        <header class="landing-nav">
-            <span class="landing-brand">Taller JEJ</span>
-            <Link href="/login" class="landing-btn landing-btn-outline"
-                >Iniciar sesión</Link
+    <Head title="Taller JEJ" />
+
+    <div class="min-h-screen bg-fondo text-slate-200">
+        <!-- Barra superior -->
+        <header
+            class="sticky top-0 z-40 border-b border-linea bg-superficie/90 backdrop-blur"
+        >
+            <div
+                class="mx-auto flex max-w-6xl items-center justify-between px-6 py-3"
             >
+                <div class="flex items-center gap-2 font-bold tracking-tight text-white">
+                    <span
+                        class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500 text-sm font-extrabold text-slate-900"
+                    >
+                        J
+                    </span>
+                    Taller JEJ
+                </div>
+                <AppButton href="/login">Iniciar sesión</AppButton>
+            </div>
         </header>
 
-        <section class="landing-hero">
-            <h1>Taller JEJ</h1>
-            <p>
-                Mantenimiento, reparación y repuestos para tu motocicleta, en un
-                solo lugar.
-            </p>
-            <Link href="/login" class="landing-btn landing-btn-primary"
-                >Iniciar sesión</Link
-            >
-        </section>
-
-        <section class="landing-servicios">
-            <h2>Nuestros servicios</h2>
-            <div class="landing-servicios-grid">
-                <div
-                    v-for="servicio in servicios"
-                    :key="servicio.titulo"
-                    class="landing-card"
+        <!-- Portada -->
+        <section
+            class="border-b border-linea bg-[radial-gradient(ellipse_at_top,rgba(245,158,11,0.14),transparent_65%)]"
+        >
+            <div class="mx-auto max-w-4xl px-6 py-24 text-center sm:py-32">
+                <p
+                    class="mb-4 inline-block rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-semibold tracking-wider text-amber-400 uppercase"
                 >
-                    <h3>{{ servicio.titulo }}</h3>
-                    <p>{{ servicio.descripcion }}</p>
+                    Taller de motocicletas
+                </p>
+                <h1
+                    class="text-4xl font-semibold tracking-tight text-slate-50 sm:text-6xl"
+                >
+                    Taller JEJ
+                </h1>
+                <p class="mx-auto mt-6 max-w-2xl text-lg text-slate-400">
+                    Mantenimiento, reparación y repuestos para tu motocicleta,
+                    en un solo lugar.
+                </p>
+                <div class="mt-10">
+                    <AppButton href="/login" variant="primary">
+                        Iniciar sesión
+                    </AppButton>
                 </div>
             </div>
         </section>
 
-        <section class="landing-nosotros">
-            <h2>Sobre nosotros</h2>
-            <p>
-                En Taller JEJ trabajamos con compromiso y experiencia para que
-                tu motocicleta esté siempre lista para rodar. Combinamos
-                atención personalizada con procesos claros: sabrás en todo
-                momento el estado de tu servicio y el costo asociado.
-            </p>
+        <!-- Servicios -->
+        <section class="mx-auto max-w-6xl px-6 py-20">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl font-semibold text-slate-50">
+                    Nuestros servicios
+                </h2>
+                <p class="mt-2 text-sm text-slate-400">
+                    Todo lo que tu moto necesita, con seguimiento claro de cada
+                    trabajo.
+                </p>
+            </div>
+
+            <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                <div
+                    v-for="(servicio, indice) in servicios"
+                    :key="servicio.titulo"
+                    class="panel p-6 transition-colors hover:border-amber-500/40"
+                >
+                    <span
+                        class="font-mono text-xs font-semibold tracking-widest text-amber-400"
+                    >
+                        0{{ indice + 1 }}
+                    </span>
+                    <h3 class="mt-3 text-base font-semibold text-slate-50">
+                        {{ servicio.titulo }}
+                    </h3>
+                    <p class="mt-2 text-sm leading-relaxed text-slate-400">
+                        {{ servicio.descripcion }}
+                    </p>
+                </div>
+            </div>
         </section>
 
-        <section class="landing-contacto">
-            <h2>Contacto</h2>
-            <ul>
-                <li>
-                    <strong>Dirección:</strong> Ej: Calle 10 #5-23, tu ciudad
-                </li>
-                <li><strong>Teléfono:</strong> Ej: 300 000 0000</li>
-                <li>
-                    <strong>Horario:</strong> Lunes a sábado, 8:00 a.m. - 6:00
-                    p.m.
-                </li>
-            </ul>
-        </section>
-
-        <footer class="landing-footer">
-            <p>
-                Taller JEJ — Proyecto de grado, Tecnología en Desarrollo de
-                Software.
-            </p>
+        <!-- Pie -->
+        <footer class="border-t border-linea">
+            <div
+                class="mx-auto max-w-6xl px-6 py-6 text-center text-xs text-slate-500"
+            >
+                © {{ anio }} Taller JEJ. Todos los derechos reservados.
+            </div>
         </footer>
     </div>
 </template>
-
-<style scoped>
-.landing {
-    font-family: 'Instrument Sans', system-ui, sans-serif;
-    color: #1f2430;
-}
-
-.landing-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.25rem 2rem;
-    border-bottom: 1px solid #e5e5e5;
-}
-
-.landing-brand {
-    font-size: 1.25rem;
-    font-weight: 700;
-}
-
-.landing-btn {
-    display: inline-block;
-    padding: 0.6rem 1.4rem;
-    border-radius: 6px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: opacity 0.15s ease;
-}
-
-.landing-btn:hover {
-    opacity: 0.85;
-}
-
-.landing-btn-primary {
-    background: #d9480f;
-    color: #fff;
-}
-
-.landing-btn-outline {
-    border: 1px solid #d9480f;
-    color: #d9480f;
-}
-
-.landing-hero {
-    text-align: center;
-    padding: 5rem 2rem;
-    background: #1f2430;
-    color: #fff;
-}
-
-.landing-hero h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-}
-
-.landing-hero p {
-    font-size: 1.15rem;
-    margin-bottom: 2rem;
-    color: #cbd0dc;
-}
-
-.landing-servicios,
-.landing-nosotros,
-.landing-contacto {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 4rem 2rem;
-}
-
-.landing-servicios h2,
-.landing-nosotros h2,
-.landing-contacto h2 {
-    font-size: 1.75rem;
-    margin-bottom: 2rem;
-    text-align: center;
-}
-
-.landing-servicios-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
-}
-
-.landing-card {
-    padding: 1.5rem;
-    border: 1px solid #e5e5e5;
-    border-radius: 10px;
-}
-
-.landing-card h3 {
-    margin-bottom: 0.5rem;
-    color: #d9480f;
-}
-
-.landing-nosotros p {
-    line-height: 1.7;
-    font-size: 1.05rem;
-    text-align: center;
-}
-
-.landing-contacto ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    max-width: 480px;
-    margin: 0 auto;
-}
-
-.landing-footer {
-    text-align: center;
-    padding: 2rem;
-    border-top: 1px solid #e5e5e5;
-    color: #6b7280;
-    font-size: 0.9rem;
-}
-</style>
