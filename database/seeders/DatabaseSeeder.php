@@ -15,5 +15,7 @@ class DatabaseSeeder extends Seeder
             'password' => '12345678',
             'rol' => 'admin',
         ]);
+
+        $this->call(DemoSeeder::class);
     }
 }
