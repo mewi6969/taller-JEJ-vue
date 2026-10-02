@@ -1,5 +1,6 @@
 <script setup>
 import { Link, router, usePage } from '@inertiajs/vue3';
+import { onBeforeUnmount, ref, watch } from 'vue';
 
 const page = usePage();
 
@@ -20,6 +21,37 @@ const links = [
 function isActive(href) {
     return page.url.startsWith(href);
 }
+
+// Aviso de confirmación (flash)
+const aviso = ref(null);
+let temporizador = null;
+
+function cerrarAviso() {
+    aviso.value = null;
+    clearTimeout(temporizador);
+}
+
+watch(
+    () => page.props.flash,
+    (flash) => {
+        const texto = flash?.success ?? flash?.error;
+
+        if (!texto) {
+            return;
+        }
+
+        aviso.value = {
+            tipo: flash.success ? 'success' : 'error',
+            texto,
+        };
+
+        clearTimeout(temporizador);
+        temporizador = setTimeout(cerrarAviso, 4000);
+    },
+    { immediate: true },
+);
+
+onBeforeUnmount(() => clearTimeout(temporizador));
 </script>
 
 <template>
@@ -66,6 +98,38 @@ function isActive(href) {
                 </button>
             </div>
         </nav>
+
+        <!-- Aviso de confirmación -->
+        <Transition
+            enter-active-class="transition duration-200 ease-out"
+            enter-from-class="translate-y-2 opacity-0"
+            enter-to-class="translate-y-0 opacity-100"
+            leave-active-class="transition duration-150 ease-in"
+            leave-from-class="opacity-100"
+            leave-to-class="opacity-0"
+        >
+            <div
+                v-if="aviso"
+                role="status"
+                aria-live="polite"
+                class="fixed top-20 right-6 z-50 flex max-w-sm items-start gap-3 rounded-lg border px-4 py-3 text-sm shadow-lg shadow-black/30"
+                :class="
+                    aviso.tipo === 'success'
+                        ? 'border-emerald-500/40 bg-emerald-950 text-emerald-200'
+                        : 'border-red-500/40 bg-red-950 text-red-200'
+                "
+            >
+                <span class="flex-1">{{ aviso.texto }}</span>
+                <button
+                    type="button"
+                    class="opacity-60 transition-opacity hover:opacity-100"
+                    aria-label="Cerrar aviso"
+                    @click="cerrarAviso"
+                >
+                    ✕
+                </button>
+            </div>
+        </Transition>
 
         <main class="mx-auto max-w-7xl px-6 py-8">
             <slot />
