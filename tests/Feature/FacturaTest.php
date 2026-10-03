@@ -205,3 +205,80 @@ it('permite a un admin eliminar (soft delete) una factura', function () {
 
     $this->assertSoftDeleted('facturas', ['id' => $factura->id]);
 });
+
+it('guarda los ultimos 4 digitos y la aprobacion cuando se paga con tarjeta', function () {
+    $admin = User::factory()->create(['rol' => 'admin']);
+    $factura = crearFacturaPendiente(100000);
+
+    $this->actingAs($admin)->put("/facturas/{$factura->id}", [
+        'estado' => 'pagada',
+        'metodo_pago' => 'tarjeta',
+        'tarjeta_ultimos4' => '4242',
+        'tarjeta_aprobacion' => 'AB-123456',
+        'fecha_pago' => now()->toDateString(),
+    ])->assertRedirect('/facturas');
+
+    $this->assertDatabaseHas('facturas', [
+        'id' => $factura->id,
+        'estado' => 'pagada',
+        'metodo_pago' => 'tarjeta',
+        'tarjeta_ultimos4' => '4242',
+        'tarjeta_aprobacion' => 'AB-123456',
+        'monto_recibido' => null,
+        'cambio' => null,
+    ]);
+});
+
+it('exige los datos del voucher cuando el pago es con tarjeta', function () {
+    $admin = User::factory()->create(['rol' => 'admin']);
+    $factura = crearFacturaPendiente(100000);
+
+    $this->actingAs($admin)->put("/facturas/{$factura->id}", [
+        'estado' => 'pagada',
+        'metodo_pago' => 'tarjeta',
+        'fecha_pago' => now()->toDateString(),
+    ])->assertSessionHasErrors(['tarjeta_ultimos4', 'tarjeta_aprobacion']);
+
+    $this->assertDatabaseHas('facturas', [
+        'id' => $factura->id,
+        'estado' => 'pendiente',
+    ]);
+});
+
+it('rechaza un numero de tarjeta completo en vez de los ultimos 4 digitos', function () {
+    $admin = User::factory()->create(['rol' => 'admin']);
+    $factura = crearFacturaPendiente(100000);
+
+    $this->actingAs($admin)->put("/facturas/{$factura->id}", [
+        'estado' => 'pagada',
+        'metodo_pago' => 'tarjeta',
+        'tarjeta_ultimos4' => '4242424242424242',
+        'tarjeta_aprobacion' => 'AB-123456',
+        'fecha_pago' => now()->toDateString(),
+    ])->assertSessionHasErrors('tarjeta_ultimos4');
+
+    $this->assertDatabaseMissing('facturas', [
+        'tarjeta_ultimos4' => '4242424242424242',
+    ]);
+});
+
+it('no guarda datos de tarjeta cuando el pago es en efectivo', function () {
+    $admin = User::factory()->create(['rol' => 'admin']);
+    $factura = crearFacturaPendiente(100000);
+
+    $this->actingAs($admin)->put("/facturas/{$factura->id}", [
+        'estado' => 'pagada',
+        'metodo_pago' => 'efectivo',
+        'monto_recibido' => 100000,
+        'tarjeta_ultimos4' => '4242',
+        'tarjeta_aprobacion' => 'AB-123456',
+        'fecha_pago' => now()->toDateString(),
+    ])->assertRedirect('/facturas');
+
+    $this->assertDatabaseHas('facturas', [
+        'id' => $factura->id,
+        'metodo_pago' => 'efectivo',
+        'tarjeta_ultimos4' => null,
+        'tarjeta_aprobacion' => null,
+    ]);
+});

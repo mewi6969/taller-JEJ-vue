@@ -24,8 +24,16 @@ class UpdateFacturaRequest extends FormRequest
 
         $reglasMonto = ['nullable', 'numeric'];
 
-        if ($this->esPagoEfectivo()) {
+        if ($this->esPago('efectivo')) {
             $reglasMonto = ['required', 'numeric', 'min:'.$factura->total];
+        }
+
+        $reglasUltimos4 = ['nullable'];
+        $reglasAprobacion = ['nullable'];
+
+        if ($this->esPago('tarjeta')) {
+            $reglasUltimos4 = ['required', 'digits:4'];
+            $reglasAprobacion = ['required', 'string', 'max:20', 'regex:/^[A-Za-z0-9-]+$/'];
         }
 
         return [
@@ -36,6 +44,8 @@ class UpdateFacturaRequest extends FormRequest
                 Rule::in(['efectivo', 'transferencia', 'tarjeta']),
             ],
             'monto_recibido' => $reglasMonto,
+            'tarjeta_ultimos4' => $reglasUltimos4,
+            'tarjeta_aprobacion' => $reglasAprobacion,
             'fecha_pago' => ['nullable', 'required_if:estado,pagada', 'date'],
         ];
     }
@@ -48,12 +58,16 @@ class UpdateFacturaRequest extends FormRequest
         return [
             'monto_recibido.required' => 'Indica cuánto entregó el cliente.',
             'monto_recibido.min' => 'El monto recibido no alcanza para cubrir el total de la factura.',
+            'tarjeta_ultimos4.required' => 'Indica los últimos 4 dígitos de la tarjeta.',
+            'tarjeta_ultimos4.digits' => 'Escribe solo los 4 últimos dígitos de la tarjeta, nunca el número completo.',
+            'tarjeta_aprobacion.required' => 'Indica el número de aprobación del voucher.',
+            'tarjeta_aprobacion.regex' => 'El número de aprobación solo puede tener letras, números y guiones.',
         ];
     }
 
-    private function esPagoEfectivo(): bool
+    private function esPago(string $metodo): bool
     {
         return $this->input('estado') === 'pagada'
-            && $this->input('metodo_pago') === 'efectivo';
+            && $this->input('metodo_pago') === $metodo;
     }
 }

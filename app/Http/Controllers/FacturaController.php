@@ -76,14 +76,20 @@ class FacturaController extends Controller
 
         $datos = $request->validated();
 
-        $esEfectivo = ($datos['estado'] ?? null) === 'pagada'
-            && ($datos['metodo_pago'] ?? null) === 'efectivo';
+        $pagada = ($datos['estado'] ?? null) === 'pagada';
+        $esEfectivo = $pagada && ($datos['metodo_pago'] ?? null) === 'efectivo';
+        $esTarjeta = $pagada && ($datos['metodo_pago'] ?? null) === 'tarjeta';
 
         if ($esEfectivo) {
             $datos['cambio'] = round((float) $datos['monto_recibido'] - (float) $factura->total, 2);
         } else {
             $datos['monto_recibido'] = null;
             $datos['cambio'] = null;
+        }
+
+        if (! $esTarjeta) {
+            $datos['tarjeta_ultimos4'] = null;
+            $datos['tarjeta_aprobacion'] = null;
         }
 
         $factura->update($datos);

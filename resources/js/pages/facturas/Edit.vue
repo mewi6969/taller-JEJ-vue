@@ -15,6 +15,8 @@ const form = useForm({
     estado: props.factura.estado,
     metodo_pago: props.factura.metodo_pago || '',
     monto_recibido: props.factura.monto_recibido ?? '',
+    tarjeta_ultimos4: props.factura.tarjeta_ultimos4 ?? '',
+    tarjeta_aprobacion: props.factura.tarjeta_aprobacion ?? '',
     fecha_pago: props.factura.fecha_pago
         ? props.factura.fecha_pago.split('T')[0]
         : '',
@@ -27,6 +29,10 @@ const esEfectivo = computed(
 
 const esTransferencia = computed(
     () => requierePago.value && form.metodo_pago === 'transferencia',
+);
+
+const esTarjeta = computed(
+    () => requierePago.value && form.metodo_pago === 'tarjeta',
 );
 
 // Diferencia entre lo que entregó el cliente y el total de la factura
@@ -201,25 +207,56 @@ function submit() {
                             </template>
                         </div>
                     </div>
-                </div>
 
-                <!-- Pago por transferencia: QR -->
-                <div v-if="esTransferencia" class="sm:col-span-2">
-                    <div
-                        class="border-linea flex flex-col items-center gap-3 rounded-lg border bg-white p-4 text-center"
-                    >
-                        <img
-                            src="/images/pagos/qr-transferencia.png"
-                            alt="QR para pagar por transferencia"
-                            class="w-56"
-                        />
-                        <p class="text-sm text-slate-700">
-                            Escanea para pagar
-                            <strong class="tabular-nums">
-                                {{ dinero(factura.total) }}
-                            </strong>
-                        </p>
+                    <!-- Pago por transferencia: QR -->
+                    <div v-if="esTransferencia" class="sm:col-span-2">
+                        <div
+                            class="border-linea flex flex-col items-center gap-3 rounded-lg border bg-white p-4 text-center"
+                        >
+                            <img
+                                src="/images/pagos/qr-transferencia.png"
+                                alt="QR para pagar por transferencia"
+                                class="w-56"
+                            />
+                            <p class="text-sm text-slate-700">
+                                Escanea para pagar
+                                <strong class="tabular-nums">
+                                    {{ dinero(factura.total) }}
+                                </strong>
+                            </p>
+                        </div>
                     </div>
+
+                    <!-- Pago con tarjeta: datos del voucher -->
+                    <template v-if="esTarjeta">
+                        <FormField
+                            label="Últimos 4 dígitos de la tarjeta"
+                            :error="form.errors.tarjeta_ultimos4"
+                            ayuda="Solo los 4 últimos. Nunca escribas el número completo."
+                        >
+                            <input
+                                type="text"
+                                inputmode="numeric"
+                                maxlength="4"
+                                v-model="form.tarjeta_ultimos4"
+                                class="campo"
+                                placeholder="1234"
+                            />
+                        </FormField>
+
+                        <FormField
+                            label="Número de aprobación"
+                            :error="form.errors.tarjeta_aprobacion"
+                            ayuda="Aparece en el voucher del datáfono."
+                        >
+                            <input
+                                type="text"
+                                maxlength="20"
+                                v-model="form.tarjeta_aprobacion"
+                                class="campo"
+                            />
+                        </FormField>
+                    </template>
                 </div>
 
                 <!-- Pie con botones -->

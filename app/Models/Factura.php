@@ -23,6 +23,8 @@ class Factura extends Model
         'metodo_pago',
         'monto_recibido',
         'cambio',
+        'tarjeta_ultimos4',
+        'tarjeta_aprobacion',
         'fecha_pago',
     ];
 
