@@ -21,6 +21,19 @@ function crearServicioTerminado(float $costoTotal = 100000): Servicio
     ]);
 }
 
+function crearFacturaPendiente(float $total = 100000): Factura
+{
+    $servicio = crearServicioTerminado($total);
+
+    return Factura::factory()->create([
+        'servicio_id' => $servicio->id,
+        'subtotal' => $total,
+        'descuento' => 0,
+        'total' => $total,
+        'estado' => 'pendiente',
+    ]);
+}
+
 it('redirige a un invitado al login al intentar acceder a facturas', function () {
     $this->get('/facturas')->assertRedirect('/login');
 });
@@ -86,14 +99,14 @@ it('no permite facturar el mismo servicio dos veces', function () {
     ])->assertSessionHasErrors('servicio_id');
 });
 
-it('permite a un admin marcar una factura como pagada', function () {
+it('permite a un admin marcar una factura como pagada en efectivo y guarda la devuelta', function () {
     $admin = User::factory()->create(['rol' => 'admin']);
-    $servicio = crearServicioTerminado();
-    $factura = Factura::factory()->create(['servicio_id' => $servicio->id]);
+    $factura = crearFacturaPendiente(100000);
 
     $this->actingAs($admin)->put("/facturas/{$factura->id}", [
         'estado' => 'pagada',
         'metodo_pago' => 'efectivo',
+        'monto_recibido' => 120000,
         'fecha_pago' => now()->toDateString(),
     ])->assertRedirect('/facturas');
 
@@ -101,6 +114,73 @@ it('permite a un admin marcar una factura como pagada', function () {
         'id' => $factura->id,
         'estado' => 'pagada',
         'metodo_pago' => 'efectivo',
+        'monto_recibido' => 120000,
+        'cambio' => 20000,
+    ]);
+});
+
+it('guarda devuelta cero cuando el cliente paga el valor exacto en efectivo', function () {
+    $admin = User::factory()->create(['rol' => 'admin']);
+    $factura = crearFacturaPendiente(100000);
+
+    $this->actingAs($admin)->put("/facturas/{$factura->id}", [
+        'estado' => 'pagada',
+        'metodo_pago' => 'efectivo',
+        'monto_recibido' => 100000,
+        'fecha_pago' => now()->toDateString(),
+    ])->assertRedirect('/facturas');
+
+    $this->assertDatabaseHas('facturas', [
+        'id' => $factura->id,
+        'monto_recibido' => 100000,
+        'cambio' => 0,
+    ]);
+});
+
+it('rechaza un pago en efectivo si el monto recibido no alcanza para el total', function () {
+    $admin = User::factory()->create(['rol' => 'admin']);
+    $factura = crearFacturaPendiente(100000);
+
+    $this->actingAs($admin)->put("/facturas/{$factura->id}", [
+        'estado' => 'pagada',
+        'metodo_pago' => 'efectivo',
+        'monto_recibido' => 80000,
+        'fecha_pago' => now()->toDateString(),
+    ])->assertSessionHasErrors('monto_recibido');
+
+    $this->assertDatabaseHas('facturas', [
+        'id' => $factura->id,
+        'estado' => 'pendiente',
+    ]);
+});
+
+it('exige el monto recibido cuando el pago es en efectivo', function () {
+    $admin = User::factory()->create(['rol' => 'admin']);
+    $factura = crearFacturaPendiente(100000);
+
+    $this->actingAs($admin)->put("/facturas/{$factura->id}", [
+        'estado' => 'pagada',
+        'metodo_pago' => 'efectivo',
+        'fecha_pago' => now()->toDateString(),
+    ])->assertSessionHasErrors('monto_recibido');
+});
+
+it('no guarda monto ni devuelta cuando el pago es por transferencia', function () {
+    $admin = User::factory()->create(['rol' => 'admin']);
+    $factura = crearFacturaPendiente(100000);
+
+    $this->actingAs($admin)->put("/facturas/{$factura->id}", [
+        'estado' => 'pagada',
+        'metodo_pago' => 'transferencia',
+        'monto_recibido' => 500000,
+        'fecha_pago' => now()->toDateString(),
+    ])->assertRedirect('/facturas');
+
+    $this->assertDatabaseHas('facturas', [
+        'id' => $factura->id,
+        'metodo_pago' => 'transferencia',
+        'monto_recibido' => null,
+        'cambio' => null,
     ]);
 });
 

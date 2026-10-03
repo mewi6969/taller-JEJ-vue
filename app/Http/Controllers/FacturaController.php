@@ -74,7 +74,19 @@ class FacturaController extends Controller
     {
         $this->authorize('update', $factura);
 
-        $factura->update($request->validated());
+        $datos = $request->validated();
+
+        $esEfectivo = ($datos['estado'] ?? null) === 'pagada'
+            && ($datos['metodo_pago'] ?? null) === 'efectivo';
+
+        if ($esEfectivo) {
+            $datos['cambio'] = round((float) $datos['monto_recibido'] - (float) $factura->total, 2);
+        } else {
+            $datos['monto_recibido'] = null;
+            $datos['cambio'] = null;
+        }
+
+        $factura->update($datos);
 
         return redirect()->route('facturas.index');
     }

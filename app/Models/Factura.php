@@ -21,6 +21,8 @@ class Factura extends Model
         'total',
         'estado',
         'metodo_pago',
+        'monto_recibido',
+        'cambio',
         'fecha_pago',
     ];
 
@@ -28,6 +30,8 @@ class Factura extends Model
         'subtotal' => 'decimal:2',
         'descuento' => 'decimal:2',
         'total' => 'decimal:2',
+        'monto_recibido' => 'decimal:2',
+        'cambio' => 'decimal:2',
         'fecha_pago' => 'date',
     ];
 

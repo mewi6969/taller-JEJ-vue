@@ -14,12 +14,29 @@ const props = defineProps({
 const form = useForm({
     estado: props.factura.estado,
     metodo_pago: props.factura.metodo_pago || '',
+    monto_recibido: props.factura.monto_recibido ?? '',
     fecha_pago: props.factura.fecha_pago
         ? props.factura.fecha_pago.split('T')[0]
         : '',
 });
 
 const requierePago = computed(() => form.estado === 'pagada');
+const esEfectivo = computed(
+    () => requierePago.value && form.metodo_pago === 'efectivo',
+);
+
+// Diferencia entre lo que entregó el cliente y el total de la factura
+const diferencia = computed(() => {
+    if (form.monto_recibido === '' || form.monto_recibido === null) {
+        return null;
+    }
+
+    return Number(form.monto_recibido) - Number(props.factura.total);
+});
+
+function dinero(valor) {
+    return `$${Number(valor).toLocaleString('es-CO')}`;
+}
 
 function badgeVariant(estado) {
     if (estado === 'pagada') return 'ok';
@@ -86,7 +103,7 @@ function submit() {
                     <p
                         class="mt-1 text-xl font-semibold text-slate-50 tabular-nums"
                     >
-                        ${{ Number(factura.total).toLocaleString('es-CO') }}
+                        {{ dinero(factura.total) }}
                     </p>
                 </div>
             </div>
@@ -140,6 +157,46 @@ function submit() {
                             class="campo"
                         />
                     </FormField>
+
+                    <!-- Pago en efectivo: monto recibido y devuelta -->
+                    <div v-if="esEfectivo" class="sm:col-span-2">
+                        <FormField
+                            label="Monto recibido"
+                            :error="form.errors.monto_recibido"
+                        >
+                            <input
+                                type="number"
+                                min="0"
+                                step="1"
+                                v-model="form.monto_recibido"
+                                class="campo"
+                                placeholder="¿Cuánto entregó el cliente?"
+                            />
+                        </FormField>
+
+                        <div
+                            v-if="diferencia !== null"
+                            class="mt-3 rounded-lg border px-4 py-3 text-sm"
+                            :class="
+                                diferencia >= 0
+                                    ? 'border-emerald-500/40 bg-emerald-950 text-emerald-200'
+                                    : 'border-red-500/40 bg-red-950 text-red-200'
+                            "
+                        >
+                            <template v-if="diferencia >= 0">
+                                Devuelta al cliente:
+                                <strong class="tabular-nums">
+                                    {{ dinero(diferencia) }}
+                                </strong>
+                            </template>
+                            <template v-else>
+                                El monto no alcanza. Faltan
+                                <strong class="tabular-nums">
+                                    {{ dinero(Math.abs(diferencia)) }}
+                                </strong>
+                            </template>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Pie con botones -->
