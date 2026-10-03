@@ -6,7 +6,7 @@
     <style>
         body { font-family: sans-serif; font-size: 13px; color: #1f2430; }
         h1 { font-size: 20px; margin-bottom: 0; }
-                .encabezado { width: 100%; margin-bottom: 10px; }
+        .encabezado { width: 100%; margin-bottom: 10px; }
         .encabezado td { border: none; padding: 0; vertical-align: middle; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
@@ -18,7 +18,7 @@
     </style>
 </head>
 <body>
-        <table class="encabezado">
+    <table class="encabezado">
         <tr>
             <td style="width: 80px;">
                 <img src="{{ public_path('images/logo/logo-jej.png') }}" alt="Taller JEJ" width="70">
@@ -101,10 +101,20 @@
                     <td><strong>${{ number_format($factura->cambio, 2) }}</strong></td>
                 </tr>
             @endif
+            @if ($factura->metodo_pago === 'tarjeta' && $factura->tarjeta_ultimos4)
+                <tr>
+                    <td>Tarjeta</td>
+                    <td>**** {{ $factura->tarjeta_ultimos4 }}</td>
+                </tr>
+                <tr>
+                    <td>N.º de aprobación</td>
+                    <td>{{ $factura->tarjeta_aprobacion }}</td>
+                </tr>
+            @endif
         </table>
     @endif
 
-        @if ($factura->estado === 'pendiente' && file_exists(public_path('images/pagos/qr-transferencia.png')))
+    @if ($factura->estado === 'pendiente' && file_exists(public_path('images/pagos/qr-transferencia.png')))
         <table class="pago">
             <tr>
                 <td class="titulo">Paga por transferencia</td>
@@ -116,6 +126,5 @@
             </tr>
         </table>
     @endif
-    
 </body>
 </html>
