@@ -46,7 +46,7 @@ class UpdateFacturaRequest extends FormRequest
             'monto_recibido' => $reglasMonto,
             'tarjeta_ultimos4' => $reglasUltimos4,
             'tarjeta_aprobacion' => $reglasAprobacion,
-            'fecha_pago' => ['nullable', 'required_if:estado,pagada', 'date'],
+            'fecha_pago' => ['nullable', 'required_if:estado,pagada', 'date', 'before_or_equal:today'],
         ];
     }
 
@@ -62,6 +62,7 @@ class UpdateFacturaRequest extends FormRequest
             'tarjeta_ultimos4.digits' => 'Escribe solo los 4 últimos dígitos de la tarjeta, nunca el número completo.',
             'tarjeta_aprobacion.required' => 'Indica el número de aprobación del voucher.',
             'tarjeta_aprobacion.regex' => 'El número de aprobación solo puede tener letras, números y guiones.',
+            'fecha_pago.before_or_equal' => 'La fecha de pago no puede ser futura.',
         ];
     }
 

@@ -282,3 +282,19 @@ it('no guarda datos de tarjeta cuando el pago es en efectivo', function () {
         'tarjeta_aprobacion' => null,
     ]);
 });
+
+it('rechaza una fecha de pago futura', function () {
+    $admin = User::factory()->create(['rol' => 'admin']);
+    $factura = crearFacturaPendiente(100000);
+
+    $this->actingAs($admin)->put("/facturas/{$factura->id}", [
+        'estado' => 'pagada',
+        'metodo_pago' => 'transferencia',
+        'fecha_pago' => now()->addDays(5)->toDateString(),
+    ])->assertSessionHasErrors('fecha_pago');
+
+    $this->assertDatabaseHas('facturas', [
+        'id' => $factura->id,
+        'estado' => 'pendiente',
+    ]);
+});
