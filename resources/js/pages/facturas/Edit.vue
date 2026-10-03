@@ -25,6 +25,10 @@ const esEfectivo = computed(
     () => requierePago.value && form.metodo_pago === 'efectivo',
 );
 
+const esTransferencia = computed(
+    () => requierePago.value && form.metodo_pago === 'transferencia',
+);
+
 // Diferencia entre lo que entregó el cliente y el total de la factura
 const diferencia = computed(() => {
     if (form.monto_recibido === '' || form.monto_recibido === null) {
@@ -196,6 +200,25 @@ function submit() {
                                 </strong>
                             </template>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Pago por transferencia: QR -->
+                <div v-if="esTransferencia" class="sm:col-span-2">
+                    <div
+                        class="border-linea flex flex-col items-center gap-3 rounded-lg border bg-white p-4 text-center"
+                    >
+                        <img
+                            src="/images/pagos/qr-transferencia.png"
+                            alt="QR para pagar por transferencia"
+                            class="w-56"
+                        />
+                        <p class="text-sm text-slate-700">
+                            Escanea para pagar
+                            <strong class="tabular-nums">
+                                {{ dinero(factura.total) }}
+                            </strong>
+                        </p>
                     </div>
                 </div>
 

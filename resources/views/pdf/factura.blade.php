@@ -103,5 +103,19 @@
             @endif
         </table>
     @endif
+
+        @if ($factura->estado === 'pendiente' && file_exists(public_path('images/pagos/qr-transferencia.png')))
+        <table class="pago">
+            <tr>
+                <td class="titulo">Paga por transferencia</td>
+            </tr>
+            <tr>
+                <td style="text-align: center; padding-top: 10px;">
+                    <img src="{{ public_path('images/pagos/qr-transferencia.png') }}" alt="QR de pago" width="170">
+                </td>
+            </tr>
+        </table>
+    @endif
+    
 </body>
 </html>
