@@ -25,13 +25,13 @@ function submit() {
         <!-- Marca -->
         <Link
             href="/"
-            class="mb-8 flex items-center gap-2 text-lg font-bold tracking-tight text-white"
+            class="mb-8 flex flex-col items-center gap-3 text-lg font-bold tracking-tight text-white"
         >
-            <span
-                class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500 text-base font-extrabold text-slate-900"
-            >
-                J
-            </span>
+            <img
+                src="/images/logo/logo-jej.png"
+                alt="Logo de Taller JEJ"
+                class="h-28 w-28 rounded-2xl"
+            />
             Taller JEJ
         </Link>
 

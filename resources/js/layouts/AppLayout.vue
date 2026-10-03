@@ -68,11 +68,11 @@ onBeforeUnmount(() => clearTimeout(temporizador));
                         href="/dashboard"
                         class="mr-4 flex items-center gap-2 font-bold tracking-tight text-white"
                     >
-                        <span
-                            class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500 text-sm font-extrabold text-slate-900"
-                        >
-                            J
-                        </span>
+                        <img
+                            src="/images/logo/logo-jej-icono.png"
+                            alt="Logo de Taller JEJ"
+                            class="h-8 w-8 rounded-lg"
+                        />
                         Taller JEJ
                     </Link>
 
