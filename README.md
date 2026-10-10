@@ -12,8 +12,6 @@ Aplicación web para la administración de clientes, servicios e inventario en u
 
 Página pública con carrusel de fotos del taller, servicios, datos de contacto, mapa con la ubicación y botón de WhatsApp.
 
-![Inicio](docs/inicio.png)
-
 Carrusel de fotos del taller:
 
 ![Inicio: carrusel](docs/inicio-1.png)
