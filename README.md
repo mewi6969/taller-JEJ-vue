@@ -8,6 +8,20 @@ Aplicación web para la administración de clientes, servicios e inventario en u
 
 ## Capturas de pantalla
 
+### Pantalla de inicio
+
+Página pública con carrusel de fotos del taller, servicios, datos de contacto, mapa con la ubicación y botón de WhatsApp.
+
+![Inicio](docs/inicio.png)
+
+Carrusel de fotos del taller:
+
+![Inicio: carrusel](docs/inicio-1.png)
+
+Contacto y ubicación:
+
+![Inicio: contacto y mapa](docs/inicio-2.png)
+
 ### Dashboard
 
 Resumen de la actividad del taller: servicios por estado, ingresos del mes, repuestos en bajo stock y carga de trabajo de los mecánicos.
@@ -36,11 +50,25 @@ Facturación con número consecutivo, estado de pago y descarga en PDF.
 
 ![Clientes](docs/clientes.png)
 
+### Repuestos
+
+Inventario con alerta de bajo stock.
+
+![Repuestos](docs/repuestos.png)
+
+### Usuarios
+
+Administración de las cuentas del personal y sus roles.
+
+![Usuarios](docs/usuarios.png)
+
 ## Stack tecnológico
 
 - **Backend:** Laravel 13 (PHP 8.5)
 - **Frontend:** Inertia.js + Vue 3 + Tailwind CSS
 - **Base de datos:** PostgreSQL 18
+- **Facturas en PDF:** DomPDF
+- **Calendario y mapa:** FullCalendar y Leaflet (OpenStreetMap)
 - **Testing:** Pest
 - **Calidad de código:** Pint (estilo PHP), PHPStan/Larastan (análisis estático) y `vp check` (formato y lint del frontend)
 - **Integración continua:** GitHub Actions
@@ -48,7 +76,7 @@ Facturación con número consecutivo, estado de pago y descarga en PDF.
 
 ## Funcionalidades
 
-- Página de inicio pública con información del taller
+- Página de inicio pública con carrusel de 5 fotos, servicios, datos de contacto, mapa de ubicación y enlace directo a WhatsApp
 - Autenticación propia (login con límite de intentos, sin paquete de scaffolding)
 - Roles de usuario: **admin**, **recepcionista**, **mecánico**
 - Dashboard con métricas: servicios por mes y por estado, repuestos en bajo stock y disponibilidad de mecánicos
@@ -56,14 +84,15 @@ Facturación con número consecutivo, estado de pago y descarga en PDF.
 - CRUD completo de:
     - **Clientes**
     - **Motocicletas** (asociadas a un cliente)
-    - **Repuestos** (con alerta de bajo stock)
+    - **Repuestos** (con alerta de bajo stock y suma automática al stock cuando el nombre ya existe)
     - **Servicios** (órdenes de trabajo con descuento automático de inventario y cálculo de costos)
-    - **Facturas** (una por servicio terminado, con número consecutivo, estado de pago y descarga en PDF)
+    - **Facturas** (una por servicio terminado, con número consecutivo, estado de pago y descarga en PDF con el logo del taller)
     - **Usuarios** (solo administradores, con eliminación lógica y bloqueo de auto-eliminación)
+- Pago de facturas en **efectivo** (con monto recibido y devuelta), por **transferencia** (código QR de pago) o con **tarjeta** (simulada: últimos 4 dígitos y número de aprobación del voucher)
 - Correo automático al cliente cuando su servicio se marca como terminado
 - Eliminación lógica (soft deletes) en todos los módulos
 - Un mecánico solo ve los servicios que tiene asignados; puede recibir permiso especial para crear servicios
-- Suite de pruebas automatizadas con Pest (64 tests / 187 aserciones)
+- Suite de pruebas automatizadas con Pest (73 tests / 214 aserciones)
 
 ## Instalación
 
@@ -95,24 +124,24 @@ php artisan migrate
 php artisan db:seed
 ```
 
+Para generar las facturas en PDF con logo, la extensión `gd` de PHP debe estar activada.
+
 ## Ejecutar el proyecto
 
-Necesitas dos terminales abiertas al mismo tiempo:
-
 ```bash
-# Terminal 1: servidor de Laravel
-php artisan serve
-
-# Terminal 2: compilación de assets (Vite)
-npm run dev
+composer run dev
 ```
 
-Accede en `http://localhost:8000`.
+Este comando levanta el servidor de Laravel, la cola y Vite a la vez. Accede en `http://localhost:8000`.
+
+Si prefieres hacerlo por separado, abre dos terminales: `php artisan serve` en una y `npm run dev` en la otra.
 
 **Usuario de prueba (admin):**
 
 - Correo: `admin@tallermotos.com`
 - Contraseña: `12345678`
+
+> Este usuario es solo para desarrollo. Cambia la contraseña antes de publicar el sistema en internet.
 
 ## Ejecutar los tests
 
