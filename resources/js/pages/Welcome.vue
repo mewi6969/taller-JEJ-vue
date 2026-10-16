@@ -13,8 +13,8 @@ import AppButton from '../components/AppButton.vue';
 const contacto = {
     telefono: '320 618 1331',
     whatsapp: '573206181331',
-    correo: 'contacto@tallerjej.com',
-    direccion: 'Calle 00 # 00-00',
+    correo: 'egrizalesbuitrago@gmail.com',
+    direccion: 'Calle 4 # 9-11, Miranda, Cauca',
     horario: 'Lunes a sábado, 8:00 a. m. a 6:00 p. m.',
 };
 

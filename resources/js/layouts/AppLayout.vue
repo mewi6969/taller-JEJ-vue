@@ -1,6 +1,6 @@
 <script setup>
 import { Link, router, usePage } from '@inertiajs/vue3';
-import { onBeforeUnmount, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
 
 const page = usePage();
 
@@ -8,16 +8,52 @@ function logout() {
     router.post('/logout');
 }
 
-const links = [
-    { href: '/dashboard', label: 'Dashboard' },
-    { href: '/clientes', label: 'Clientes' },
-    { href: '/motocicletas', label: 'Motocicletas' },
-    { href: '/repuestos', label: 'Repuestos' },
-    { href: '/servicios', label: 'Servicios' },
-    { href: '/calendario', label: 'Calendario' },
-    { href: '/facturas', label: 'Facturas' },
-    { href: '/usuarios', label: 'Usuarios' },
+const rol = computed(() => page.props.auth?.user?.rol);
+
+const todosLosLinks = [
+    {
+        href: '/dashboard',
+        label: 'Dashboard',
+        roles: ['admin', 'recepcionista', 'mecanico'],
+    },
+    {
+        href: '/clientes',
+        label: 'Clientes',
+        roles: ['admin', 'recepcionista'],
+    },
+    {
+        href: '/motocicletas',
+        label: 'Motocicletas',
+        roles: ['admin', 'recepcionista'],
+    },
+    {
+        href: '/repuestos',
+        label: 'Repuestos',
+        roles: ['admin', 'recepcionista'],
+    },
+    {
+        href: '/servicios',
+        label: 'Servicios',
+        roles: ['admin', 'recepcionista', 'mecanico'],
+    },
+    {
+        href: '/calendario',
+        label: 'Calendario',
+        roles: ['admin', 'recepcionista', 'mecanico'],
+    },
+    {
+        href: '/facturas',
+        label: 'Facturas',
+        roles: ['admin', 'recepcionista'],
+    },
+    { href: '/usuarios', label: 'Usuarios', roles: ['admin'] },
+
+    { href: '/portal', label: 'Mis facturas', roles: ['cliente'] },
 ];
+
+const links = computed(() =>
+    todosLosLinks.filter((link) => link.roles.includes(rol.value)),
+);
 
 function isActive(href) {
     return page.url.startsWith(href);
@@ -57,15 +93,15 @@ onBeforeUnmount(() => clearTimeout(temporizador));
 
 <template>
     <div class="bg-fondo min-h-screen text-slate-200">
-        <nav
-            class="border-linea bg-superficie/90 sticky top-0 z-40 border-b backdrop-blur"
+            <nav
+        class="border-linea bg-superficie/90 sticky top-0 z-40 border-b backdrop-blur"
+    >
+        <div
+            class="mx-auto flex max-w-7xl ..."
         >
-            <div
-                class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-y-2 px-6 py-3"
-            >
                 <div class="flex flex-wrap items-center gap-x-1 gap-y-1">
                     <Link
-                        href="/dashboard"
+                        :href="rol === 'cliente' ? '/portal' : '/dashboard'"
                         class="mr-4 flex items-center gap-2 font-bold tracking-tight text-white"
                     >
                         <img

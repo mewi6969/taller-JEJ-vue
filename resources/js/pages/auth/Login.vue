@@ -122,6 +122,11 @@ function submit() {
                             form.processing ? 'Ingresando...' : 'Iniciar sesión'
                         }}
                     </AppButton>
+                    <AppButton
+                        href="/registro"
+                        class="text-amber-400 hover:underline"
+                        >Crear cuenta
+                    </AppButton>
                 </form>
             </div>
         </div>
