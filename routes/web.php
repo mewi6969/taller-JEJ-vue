@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
 // Portal del cliente (verificado)
 Route::middleware(['auth', 'cliente'])->group(function () {
     Route::get('portal', [PortalController::class, 'index'])->name('portal');
+    Route::get('portal/facturas/{factura}/pdf', [PortalController::class, 'pdf'])->name('portal.facturas.pdf');
 
     Route::get('portal/catalogo', [PortalPedidoController::class, 'catalogo'])->name('portal.catalogo');
     Route::get('portal/pedidos', [PortalPedidoController::class, 'index'])->name('portal.pedidos');

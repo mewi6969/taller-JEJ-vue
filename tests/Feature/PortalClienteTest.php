@@ -116,3 +116,36 @@ it('el cliente solo ve sus propias facturas', function () {
             ->where('facturas.0.id', $propia->id)
     );
 });
+
+it('permite al cliente descargar el pdf de su propia factura', function () {
+    $cliente = Cliente::factory()->create();
+    $usuario = User::factory()->create([
+        'rol' => 'cliente',
+        'cliente_id' => $cliente->id,
+        'email_verified_at' => now(),
+    ]);
+    $moto = Motocicleta::factory()->create(['cliente_id' => $cliente->id]);
+    $servicio = Servicio::factory()->create(['motocicleta_id' => $moto->id, 'estado' => 'terminado']);
+    $factura = Factura::factory()->create(['servicio_id' => $servicio->id]);
+
+    $this->actingAs($usuario)
+        ->get("/portal/facturas/{$factura->id}/pdf")
+        ->assertOk()
+        ->assertHeader('content-type', 'application/pdf');
+});
+
+it('prohibe al cliente descargar el pdf de una factura ajena', function () {
+    $cliente = Cliente::factory()->create();
+    $usuario = User::factory()->create([
+        'rol' => 'cliente',
+        'cliente_id' => $cliente->id,
+        'email_verified_at' => now(),
+    ]);
+    $otraMoto = Motocicleta::factory()->create();
+    $servicio = Servicio::factory()->create(['motocicleta_id' => $otraMoto->id, 'estado' => 'terminado']);
+    $ajena = Factura::factory()->create(['servicio_id' => $servicio->id]);
+
+    $this->actingAs($usuario)
+        ->get("/portal/facturas/{$ajena->id}/pdf")
+        ->assertForbidden();
+});
