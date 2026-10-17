@@ -57,14 +57,14 @@ class DashboardController extends Controller
         })->values();
 
         $recientes = (clone $servicios)
-            ->with(['motocicleta.cliente', 'mecanico'])
+            ->with(['motocicleta' => fn ($q) => $q->withTrashed(), 'motocicleta.cliente' => fn ($q) => $q->withTrashed()])
             ->latest()
             ->take(5)
             ->get()
             ->map(fn (Servicio $servicio) => [
                 'id' => $servicio->id,
-                'placa' => $servicio->motocicleta->placa,
-                'cliente' => $servicio->motocicleta->cliente->nombre.' '.$servicio->motocicleta->cliente->apellido,
+                'placa' => $servicio->motocicleta?->placa ?? '—',
+                'cliente' => trim(($servicio->motocicleta?->cliente?->nombre ?? 'Cliente eliminado').' '.($servicio->motocicleta?->cliente?->apellido ?? '')),
                 'estado' => $servicio->estado,
                 'costo_total' => (float) $servicio->costo_total,
             ]);
