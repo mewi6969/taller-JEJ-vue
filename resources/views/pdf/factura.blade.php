@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -21,7 +21,7 @@
     <table class="encabezado">
         <tr>
             <td style="width: 80px;">
-                <img src="{{ public_path('images/logo/logo-jej.png') }}" alt="Taller JEJ" width="70">
+                <img src="{{ public_path('images/logo/logo-jej-pdf.png') }}" alt="Taller JEJ" width="70">
             </td>
             <td>
                 <h1>Taller JEJ</h1>
