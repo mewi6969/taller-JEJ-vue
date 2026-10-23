@@ -33,12 +33,7 @@ function dinero(valor) {
                     Facturas de los servicios realizados a tus motocicletas.
                 </p>
             </div>
-            <div class="flex gap-2">
-                <AppButton href="/portal/catalogo">Catálogo</AppButton>
-                <AppButton href="/portal/pedidos" variant="primary">
-                    Mis pedidos
-                </AppButton>
-            </div>
+
         </div>
 
         <div class="panel">
@@ -84,9 +79,10 @@ function dinero(valor) {
                             <td>
                                 <div class="flex justify-end">
                                     <a
-                                        :href="`/facturas/${factura.id}/pdf`"
+                                        :href="`/portal/facturas/${factura.id}/pdf`"
                                         target="_blank"
-                                        class="border-linea hover:bg-superficie-alta inline-flex items-center justify-center rounded-md border px-3 py-1.5 text-xs text-slate-100 transition-colors"
+                                        rel="noopener"
+                                        class="border-linea hover:bg-superficie-alta rounded-md border px-3 py-1.5 text-sm text-slate-200 transition-colors"
                                     >
                                         PDF
                                     </a>

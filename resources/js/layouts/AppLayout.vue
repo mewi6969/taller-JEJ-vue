@@ -46,9 +46,16 @@ const todosLosLinks = [
         label: 'Facturas',
         roles: ['admin', 'recepcionista'],
     },
+    {
+        href: '/pedidos',
+        label: 'Pedidos',
+        roles: ['admin', 'recepcionista'],
+    },
     { href: '/usuarios', label: 'Usuarios', roles: ['admin'] },
 
     { href: '/portal', label: 'Mis facturas', roles: ['cliente'] },
+    { href: '/portal/catalogo', label: 'Catálogo', roles: ['cliente'] },
+    { href: '/portal/pedidos', label: 'Mis pedidos', roles: ['cliente'] },
 ];
 
 const links = computed(() =>
@@ -56,7 +63,14 @@ const links = computed(() =>
 );
 
 function isActive(href) {
-    return page.url.startsWith(href);
+    const ruta = page.url.split('?')[0];
+
+    // /portal solo se resalta en la pantalla de facturas, no en sus sub-rutas
+    if (href === '/portal') {
+        return ruta === '/portal';
+    }
+
+    return ruta.startsWith(href);
 }
 
 // Aviso de confirmación (flash)
@@ -93,16 +107,16 @@ onBeforeUnmount(() => clearTimeout(temporizador));
 
 <template>
     <div class="bg-fondo min-h-screen text-slate-200">
-            <nav
-        class="border-linea bg-superficie/90 sticky top-0 z-40 border-b backdrop-blur"
-    >
-        <div
-            class="mx-auto flex max-w-7xl ..."
+        <nav
+            class="border-linea bg-superficie/90 sticky top-0 z-40 border-b backdrop-blur"
         >
-                <div class="flex flex-wrap items-center gap-x-1 gap-y-1">
+            <div
+                class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-3"
+            >
+                <div class="flex flex-wrap items-center gap-x-2 gap-y-2">
                     <Link
                         :href="rol === 'cliente' ? '/portal' : '/dashboard'"
-                        class="mr-4 flex items-center gap-2 font-bold tracking-tight text-white"
+                        class="mr-6 flex items-center gap-2 font-bold tracking-tight whitespace-nowrap text-white"
                     >
                         <img
                             src="/images/logo/logo-jej-icono.png"
@@ -116,7 +130,7 @@ onBeforeUnmount(() => clearTimeout(temporizador));
                         v-for="link in links"
                         :key="link.href"
                         :href="link.href"
-                        class="rounded-md px-3 py-1.5 text-sm font-medium transition-colors"
+                        class="rounded-md px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors"
                         :class="
                             isActive(link.href)
                                 ? 'bg-amber-500/10 text-amber-400'
@@ -128,7 +142,7 @@ onBeforeUnmount(() => clearTimeout(temporizador));
                 </div>
 
                 <button
-                    class="border-linea hover:bg-superficie-alta rounded-md border px-3 py-1.5 text-sm text-slate-200 transition-colors"
+                    class="border-linea hover:bg-superficie-alta shrink-0 rounded-md border px-4 py-2 text-sm text-slate-200 transition-colors"
                     @click="logout"
                 >
                     Salir

@@ -15,9 +15,11 @@ use App\Policies\RepuestoPolicy;
 use App\Policies\ServicioPolicy;
 use App\Policies\UserPolicy;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -38,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         $this->configurePolicies();
+        $this->configureLazyLoadingDetection();
     }
 
     /**
@@ -70,5 +73,21 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Servicio::class, ServicioPolicy::class);
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Factura::class, FacturaPolicy::class);
+    }
+
+    /**
+     * Detecta consultas N+1 en desarrollo: solo escribe un aviso en el log.
+     */
+    protected function configureLazyLoadingDetection(): void
+    {
+        if ($this->app->isProduction()) {
+            return;
+        }
+
+        Model::preventLazyLoading();
+
+        Model::handleLazyLoadingViolationUsing(function ($model, $relation) {
+            Log::warning("N+1: se cargó '{$relation}' de ".get_class($model).' sin eager loading');
+        });
     }
 }

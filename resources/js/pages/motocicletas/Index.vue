@@ -112,8 +112,8 @@ function etiquetaPagina(link, index) {
                                 </span>
                             </td>
                             <td class="text-slate-300">
-                                {{ moto.cliente.nombre }}
-                                {{ moto.cliente.apellido }}
+                                {{ moto.cliente?.nombre ?? 'Sin cliente' }}
+                                {{ moto.cliente?.apellido ?? '' }}
                             </td>
                             <td>
                                 <div class="flex justify-end gap-2">
