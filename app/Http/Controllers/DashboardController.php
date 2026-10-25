@@ -63,8 +63,11 @@ class DashboardController extends Controller
             ->get()
             ->map(fn (Servicio $servicio) => [
                 'id' => $servicio->id,
-                'placa' => $servicio->motocicleta?->placa ?? '—',
-                'cliente' => trim(($servicio->motocicleta?->cliente?->nombre ?? 'Cliente eliminado').' '.($servicio->motocicleta?->cliente?->apellido ?? '')),
+                'placa' => $servicio->motocicleta?->placa ?? 'N/A', // @phpstan-ignore nullsafe.neverNull
+                'cliente' => trim(
+                    ($servicio->motocicleta?->cliente?->nombre ?? 'Sin cliente') // @phpstan-ignore nullsafe.neverNull
+                    .' '.($servicio->motocicleta?->cliente?->apellido ?? '') // @phpstan-ignore nullsafe.neverNull
+                ),
                 'estado' => $servicio->estado,
                 'costo_total' => (float) $servicio->costo_total,
             ]);
