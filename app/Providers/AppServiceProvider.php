@@ -80,7 +80,7 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function configureLazyLoadingDetection(): void
     {
-        if ($this->app->isProduction()) {
+        if (app()->isProduction()) {
             return;
         }
 
