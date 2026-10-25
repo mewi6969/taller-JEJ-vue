@@ -33,7 +33,6 @@ function dinero(valor) {
                     Facturas de los servicios realizados a tus motocicletas.
                 </p>
             </div>
-
         </div>
 
         <div class="panel">

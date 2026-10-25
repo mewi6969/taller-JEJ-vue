@@ -75,21 +75,33 @@ function etiquetaPagina(link, index) {
                                 {{ factura.numero_factura }}
                             </td>
                             <td class="font-medium text-slate-50">
-                                {{ factura.servicio?.motocicleta?.cliente?.nombre ?? 'Sin cliente' }}
-                                {{ factura.servicio?.motocicleta?.cliente?.apellido ?? '' }}
+                                {{
+                                    factura.servicio?.motocicleta?.cliente
+                                        ?.nombre ?? 'Sin cliente'
+                                }}
+                                {{
+                                    factura.servicio?.motocicleta?.cliente
+                                        ?.apellido ?? ''
+                                }}
                             </td>
                             <td>
                                 <span
                                     class="rounded-md border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 font-mono text-xs font-semibold tracking-widest text-amber-400 uppercase"
                                 >
-                                    {{ factura.servicio?.motocicleta?.placa ?? 'N/A' }}
+                                    {{
+                                        factura.servicio?.motocicleta?.placa ??
+                                        'N/A'
+                                    }}
                                 </span>
                             </td>
                             <td>
                                 <span
                                     class="rounded-md border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 font-mono text-xs font-semibold tracking-widest text-amber-400 uppercase"
                                 >
-                                    {{ factura.servicio?.motocicleta?.placa ?? 'N/A' }}
+                                    {{
+                                        factura.servicio?.motocicleta?.placa ??
+                                        'N/A'
+                                    }}
                                 </span>
                             </td>
                             <td

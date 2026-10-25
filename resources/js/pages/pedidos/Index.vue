@@ -125,7 +125,9 @@ function cancelarPedido() {
                                 ${{ pedido.total.toLocaleString('es-CO') }}
                             </td>
                             <td>
-                                <AppBadge :variant="badgeVariant(pedido.estado)">
+                                <AppBadge
+                                    :variant="badgeVariant(pedido.estado)"
+                                >
                                     <span class="capitalize">
                                         {{ pedido.estado }}
                                     </span>
