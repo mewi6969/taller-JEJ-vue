@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\OlvidoContrasenaController;
+use App\Http\Controllers\Auth\RestablecerContrasenaController;
 use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\DashboardController;
@@ -22,6 +24,16 @@ Route::inertia('/', 'Welcome')->name('home');
 Route::middleware('guest')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+
+    Route::get('olvide-contrasena', [OlvidoContrasenaController::class, 'create'])->name('password.request');
+    Route::post('olvide-contrasena', [OlvidoContrasenaController::class, 'store'])
+        ->middleware('throttle:3,1')
+        ->name('password.email');
+
+    Route::get('restablecer-contrasena/{token}', [RestablecerContrasenaController::class, 'create'])->name('password.reset');
+    Route::post('restablecer-contrasena', [RestablecerContrasenaController::class, 'store'])
+        ->middleware('throttle:5,1')
+        ->name('password.store');
 
     Route::get('registro', [RegistroClienteController::class, 'create'])->name('registro');
     Route::post('registro', [RegistroClienteController::class, 'store'])->middleware('throttle:10,1');

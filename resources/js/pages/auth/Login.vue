@@ -3,6 +3,10 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 
 import AppButton from '../../components/AppButton.vue';
 
+const props = defineProps({
+    status: { type: String, default: null },
+});
+
 const form = useForm({
     email: '',
     password: '',
@@ -43,6 +47,13 @@ function submit() {
                 </h1>
                 <p class="mt-1 text-sm text-slate-400">
                     Ingresa con tu cuenta del taller para continuar.
+                </p>
+
+                <p
+                    v-if="props.status"
+                    class="mt-4 rounded-lg bg-emerald-500/10 p-3 text-sm text-emerald-400"
+                >
+                    {{ props.status }}
                 </p>
 
                 <form @submit.prevent="submit" class="mt-8 flex flex-col gap-5">
@@ -101,16 +112,25 @@ function submit() {
                         </p>
                     </div>
 
-                    <label
-                        class="flex cursor-pointer items-center gap-2 text-sm text-slate-300"
-                    >
-                        <input
-                            type="checkbox"
-                            v-model="form.remember"
-                            class="h-4 w-4 accent-amber-500"
-                        />
-                        Recordarme
-                    </label>
+                    <div class="flex items-center justify-between">
+                        <label
+                            class="flex cursor-pointer items-center gap-2 text-sm text-slate-300"
+                        >
+                            <input
+                                type="checkbox"
+                                v-model="form.remember"
+                                class="h-4 w-4 accent-amber-500"
+                            />
+                            Recordarme
+                        </label>
+
+                        <Link
+                            href="/olvide-contrasena"
+                            class="text-sm text-amber-400 hover:underline"
+                        >
+                            ¿Olvidaste tu contraseña?
+                        </Link>
+                    </div>
 
                     <AppButton
                         type="submit"
