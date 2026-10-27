@@ -37,10 +37,6 @@ class ServicioPolicy
 
     public function delete(User $user, Servicio $servicio): bool
     {
-        if ($user->esAdmin()) {
-            return true;
-        }
-
-        return $user->esMecanico() && $servicio->mecanico_id === $user->id;
+        return $user->esAdmin();
     }
 }

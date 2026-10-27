@@ -1,6 +1,6 @@
 <script setup>
-import { Head, Link, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 
 import AppBadge from '../../components/AppBadge.vue';
 import AppButton from '../../components/AppButton.vue';
@@ -11,6 +11,9 @@ const props = defineProps({
     servicios: Object,
     filtros: Object,
 });
+
+const page = usePage();
+const esAdmin = computed(() => page.props.auth?.user?.rol === 'admin');
 
 const buscar = ref(props.filtros.buscar || '');
 const servicioAEliminar = ref(null);
@@ -165,6 +168,7 @@ function etiquetaPagina(link, index) {
                                         Editar
                                     </AppButton>
                                     <AppButton
+                                        v-if="esAdmin"
                                         size="sm"
                                         variant="danger"
                                         @click="confirmarEliminar(servicio)"

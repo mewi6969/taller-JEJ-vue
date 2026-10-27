@@ -133,3 +133,25 @@ it('elimina un servicio de forma logica', function () {
 
     $this->assertSoftDeleted('servicios', ['id' => $servicio->id]);
 });
+
+it('no permite a un mecanico eliminar un servicio, ni siquiera el que tiene asignado', function () {
+    $mecanico = User::factory()->create(['rol' => 'mecanico']);
+    $servicio = Servicio::factory()->create(['mecanico_id' => $mecanico->id]);
+
+    $this->actingAs($mecanico)
+        ->delete("/servicios/{$servicio->id}")
+        ->assertForbidden();
+
+    $this->assertNotSoftDeleted('servicios', ['id' => $servicio->id]);
+});
+
+it('no permite a un recepcionista eliminar un servicio', function () {
+    $recepcionista = User::factory()->create(['rol' => 'recepcionista']);
+    $servicio = Servicio::factory()->create();
+
+    $this->actingAs($recepcionista)
+        ->delete("/servicios/{$servicio->id}")
+        ->assertForbidden();
+
+    $this->assertNotSoftDeleted('servicios', ['id' => $servicio->id]);
+});
