@@ -3,10 +3,17 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
-const props = defineProps({ repuestos: Array });
+const props = defineProps({
+    repuestos: Array,
+    motocicletas: { type: Array, default: () => [] },
+});
 
 const cantidades = ref({});
-const form = useForm({ nota: '' });
+const form = useForm({
+    motocicleta_id:
+        props.motocicletas.length === 1 ? props.motocicletas[0].id : '',
+    nota: '',
+});
 
 const items = computed(() =>
     Object.entries(cantidades.value)
@@ -23,6 +30,10 @@ const total = computed(() =>
 
         return suma + (repuesto ? Number(repuesto.precio) * item.cantidad : 0);
     }, 0),
+);
+
+const faltaMoto = computed(
+    () => props.motocicletas.length > 0 && !form.motocicleta_id,
 );
 
 function dinero(valor) {
@@ -93,6 +104,36 @@ function enviar() {
             </div>
 
             <div class="panel space-y-4 p-6">
+                <div v-if="motocicletas.length > 1">
+                    <label for="motocicleta" class="mb-1 block text-sm">
+                        ¿Para cuál moto es el pedido?
+                    </label>
+                    <select
+                        id="motocicleta"
+                        v-model="form.motocicleta_id"
+                        class="campo w-full"
+                    >
+                        <option value="" disabled>Elige una moto</option>
+                        <option
+                            v-for="m in motocicletas"
+                            :key="m.id"
+                            :value="m.id"
+                        >
+                            {{ m.placa }} — {{ m.marca }} {{ m.modelo }}
+                        </option>
+                    </select>
+                </div>
+                <p
+                    v-else-if="motocicletas.length === 1"
+                    class="text-sm text-slate-300"
+                >
+                    Moto:
+                    <strong class="text-white">
+                        {{ motocicletas[0].placa }}
+                    </strong>
+                    — {{ motocicletas[0].marca }} {{ motocicletas[0].modelo }}
+                </p>
+
                 <div>
                     <label class="mb-1 block text-sm">Nota (opcional)</label>
                     <textarea
@@ -100,7 +141,7 @@ function enviar() {
                         rows="2"
                         maxlength="500"
                         class="campo w-full"
-                        placeholder="Ej: es para mi moto de placa ABC12D"
+                        placeholder="Ej: prefiero repuesto original"
                     />
                 </div>
 
@@ -119,7 +160,9 @@ function enviar() {
                     </p>
                     <button
                         type="submit"
-                        :disabled="form.processing || items.length === 0"
+                        :disabled="
+                            form.processing || items.length === 0 || faltaMoto
+                        "
                         class="rounded-md bg-amber-500 px-4 py-2 font-semibold text-slate-900 hover:bg-amber-400 disabled:opacity-50"
                     >
                         Enviar pedido

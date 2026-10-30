@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Cliente;
+use App\Models\Motocicleta;
 use App\Models\Pedido;
 use App\Models\Repuesto;
 use App\Models\User;
@@ -158,4 +159,81 @@ it('rechaza un estado invalido en un pedido', function () {
     $this->actingAs($admin)
         ->patch("/pedidos/{$pedido->id}", ['estado' => 'inventado'])
         ->assertSessionHasErrors('estado');
+});
+
+it('muestra al cliente en el catalogo solo sus propias motos', function () {
+    $user = clienteConPortal();
+    Motocicleta::factory()->count(2)->create(['cliente_id' => $user->cliente_id]);
+    Motocicleta::factory()->create();
+
+    $this->actingAs($user)->get('/portal/catalogo')->assertInertia(
+        fn ($page) => $page->component('portal/Catalogo')->has('motocicletas', 2)
+    );
+});
+
+it('guarda la moto elegida cuando el cliente tiene varias', function () {
+    $repuesto = Repuesto::factory()->create(['cantidad' => 10]);
+    $user = clienteConPortal();
+    Motocicleta::factory()->create(['cliente_id' => $user->cliente_id]);
+    $elegida = Motocicleta::factory()->create(['cliente_id' => $user->cliente_id]);
+
+    $this->actingAs($user)->post('/portal/pedidos', [
+        'motocicleta_id' => $elegida->id,
+        'items' => [['repuesto_id' => $repuesto->id, 'cantidad' => 1]],
+    ])->assertRedirect('/portal/pedidos');
+
+    expect(Pedido::first()->motocicleta_id)->toBe($elegida->id);
+});
+
+it('exige elegir moto cuando el cliente tiene motos registradas', function () {
+    $repuesto = Repuesto::factory()->create(['cantidad' => 10]);
+    $user = clienteConPortal();
+    Motocicleta::factory()->count(2)->create(['cliente_id' => $user->cliente_id]);
+
+    $this->actingAs($user)->post('/portal/pedidos', [
+        'items' => [['repuesto_id' => $repuesto->id, 'cantidad' => 1]],
+    ])->assertSessionHasErrors('motocicleta_id');
+
+    expect(Pedido::count())->toBe(0);
+});
+
+it('rechaza una moto que pertenece a otro cliente', function () {
+    $repuesto = Repuesto::factory()->create(['cantidad' => 10]);
+    $user = clienteConPortal();
+    Motocicleta::factory()->create(['cliente_id' => $user->cliente_id]);
+    $ajena = Motocicleta::factory()->create();
+
+    $this->actingAs($user)->post('/portal/pedidos', [
+        'motocicleta_id' => $ajena->id,
+        'items' => [['repuesto_id' => $repuesto->id, 'cantidad' => 1]],
+    ])->assertSessionHasErrors('motocicleta_id');
+
+    expect(Pedido::count())->toBe(0);
+});
+
+it('permite pedir sin moto si el cliente no tiene ninguna', function () {
+    $repuesto = Repuesto::factory()->create(['cantidad' => 10]);
+
+    $this->actingAs(clienteConPortal())->post('/portal/pedidos', [
+        'items' => [['repuesto_id' => $repuesto->id, 'cantidad' => 1]],
+    ])->assertRedirect('/portal/pedidos');
+
+    expect(Pedido::first()->motocicleta_id)->toBeNull();
+});
+
+it('muestra la moto del pedido al cliente y al taller', function () {
+    $admin = User::factory()->create(['rol' => 'admin']);
+    $user = clienteConPortal();
+    $moto = Motocicleta::factory()->create(['cliente_id' => $user->cliente_id]);
+
+    $pedido = pedidoDe($user, [Repuesto::factory()->create()]);
+    $pedido->update(['motocicleta_id' => $moto->id]);
+
+    $this->actingAs($user)->get('/portal/pedidos')->assertInertia(
+        fn ($page) => $page->where('pedidos.0.motocicleta.placa', $moto->placa)
+    );
+
+    $this->actingAs($admin)->get('/pedidos')->assertInertia(
+        fn ($page) => $page->where('pedidos.0.motocicleta.placa', $moto->placa)
+    );
 });

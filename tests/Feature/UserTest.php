@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Cliente;
+use App\Models\Servicio;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -95,7 +97,7 @@ it('bloquea a un admin de eliminar su propia cuenta', function () {
     $this->assertDatabaseHas('users', ['id' => $admin->id]);
 });
 
-it('permite a un admin eliminar (soft delete) a otro usuario', function () {
+it('elimina por completo a otro usuario de la base de datos', function () {
     $admin = User::factory()->create(['rol' => 'admin']);
     $usuario = User::factory()->create(['rol' => 'mecanico']);
 
@@ -103,15 +105,19 @@ it('permite a un admin eliminar (soft delete) a otro usuario', function () {
         ->delete("/usuarios/{$usuario->id}")
         ->assertRedirect('/usuarios');
 
-    $this->assertSoftDeleted('users', ['id' => $usuario->id]);
+    $this->assertDatabaseMissing('users', ['id' => $usuario->id]);
 });
 
-it('bloquea el login de un usuario eliminado (soft deleted)', function () {
+it('un usuario eliminado ya no puede iniciar sesion', function () {
+    $admin = User::factory()->create(['rol' => 'admin']);
     $usuario = User::factory()->create([
         'email' => 'eliminado@test.com',
+        'rol' => 'mecanico',
         'password' => bcrypt('12345678'),
     ]);
-    $usuario->delete();
+
+    $this->actingAs($admin)->delete("/usuarios/{$usuario->id}");
+    $this->post('/logout');
 
     $this->post('/login', [
         'email' => 'eliminado@test.com',
@@ -119,4 +125,33 @@ it('bloquea el login de un usuario eliminado (soft deleted)', function () {
     ]);
 
     $this->assertGuest();
+});
+
+it('al eliminar un mecanico sus servicios se conservan sin asignar', function () {
+    $admin = User::factory()->create(['rol' => 'admin']);
+    $mecanico = User::factory()->create(['rol' => 'mecanico']);
+    $servicio = Servicio::factory()->create(['mecanico_id' => $mecanico->id]);
+
+    $this->actingAs($admin)
+        ->delete("/usuarios/{$mecanico->id}")
+        ->assertRedirect('/usuarios');
+
+    $this->assertDatabaseMissing('users', ['id' => $mecanico->id]);
+    expect($servicio->fresh()->mecanico_id)->toBeNull();
+});
+
+it('al eliminar el usuario de un cliente se conserva su ficha de cliente', function () {
+    $admin = User::factory()->create(['rol' => 'admin']);
+    $cliente = Cliente::factory()->create();
+    $usuarioCliente = User::factory()->create([
+        'rol' => 'cliente',
+        'cliente_id' => $cliente->id,
+    ]);
+
+    $this->actingAs($admin)
+        ->delete("/usuarios/{$usuarioCliente->id}")
+        ->assertRedirect('/usuarios');
+
+    $this->assertDatabaseMissing('users', ['id' => $usuarioCliente->id]);
+    $this->assertDatabaseHas('clientes', ['id' => $cliente->id]);
 });

@@ -8,7 +8,10 @@ import ConfirmDialog from '../../components/ConfirmDialog.vue';
 import AppLayout from '../../layouts/AppLayout.vue';
 
 const props = defineProps({
-    facturas: Object,
+    facturas: {
+        type: Object,
+        default: () => ({ data: [], links: [], total: 0, from: 0, to: 0 }),
+    },
 });
 
 const facturaAEliminar = ref(null);
@@ -29,9 +32,20 @@ function badgeVariant(estado) {
     return 'warning';
 }
 
+function formatearFecha(fecha) {
+    if (!fecha) return '—';
+
+    return new Date(fecha).toLocaleDateString('es-CO', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    });
+}
+
 function etiquetaPagina(link, index) {
+    const total = props.facturas.links?.length ?? 0;
     if (index === 0) return 'Anterior';
-    if (index === props.facturas.links.length - 1) return 'Siguiente';
+    if (index === total - 1) return 'Siguiente';
     return link.label;
 }
 </script>
@@ -60,6 +74,7 @@ function etiquetaPagina(link, index) {
                     <thead>
                         <tr>
                             <th>Número</th>
+                            <th>Fecha</th>
                             <th>Cliente</th>
                             <th>Motocicleta</th>
                             <th>Total</th>
@@ -68,11 +83,17 @@ function etiquetaPagina(link, index) {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="factura in facturas.data" :key="factura.id">
+                        <tr
+                            v-for="factura in facturas.data ?? []"
+                            :key="factura.id"
+                        >
                             <td
                                 class="font-mono text-xs font-semibold tracking-wider text-amber-400"
                             >
                                 {{ factura.numero_factura }}
+                            </td>
+                            <td class="text-slate-300 tabular-nums">
+                                {{ formatearFecha(factura.created_at) }}
                             </td>
                             <td class="font-medium text-slate-50">
                                 {{
@@ -83,16 +104,6 @@ function etiquetaPagina(link, index) {
                                     factura.servicio?.motocicleta?.cliente
                                         ?.apellido ?? ''
                                 }}
-                            </td>
-                            <td>
-                                <span
-                                    class="rounded-md border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 font-mono text-xs font-semibold tracking-widest text-amber-400 uppercase"
-                                >
-                                    {{
-                                        factura.servicio?.motocicleta?.placa ??
-                                        'N/A'
-                                    }}
-                                </span>
                             </td>
                             <td>
                                 <span
@@ -147,9 +158,9 @@ function etiquetaPagina(link, index) {
                                 </div>
                             </td>
                         </tr>
-                        <tr v-if="facturas.data.length === 0">
+                        <tr v-if="(facturas.data ?? []).length === 0">
                             <td
-                                colspan="6"
+                                colspan="7"
                                 class="py-12 text-center text-slate-400"
                             >
                                 No hay facturas registradas.
@@ -164,14 +175,17 @@ function etiquetaPagina(link, index) {
                 class="border-linea flex flex-col gap-3 border-t px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
             >
                 <p class="text-sm text-slate-400">
-                    <template v-if="facturas.total > 0">
+                    <template v-if="(facturas.total ?? 0) > 0">
                         Mostrando {{ facturas.from }} a {{ facturas.to }} de
                         {{ facturas.total }} facturas
                     </template>
                     <template v-else>Sin resultados</template>
                 </p>
 
-                <div v-if="facturas.links.length > 3" class="flex gap-1">
+                <div
+                    v-if="(facturas.links ?? []).length > 3"
+                    class="flex gap-1"
+                >
                     <template
                         v-for="(link, index) in facturas.links"
                         :key="index"

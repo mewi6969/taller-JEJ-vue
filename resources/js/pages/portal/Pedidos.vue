@@ -60,6 +60,13 @@ const colores = {
                         {{ p.estado }}
                     </span>
                 </div>
+                <p v-if="p.motocicleta" class="text-sm text-slate-300">
+                    Moto:
+                    <strong class="text-white">{{
+                        p.motocicleta.placa
+                    }}</strong>
+                    — {{ p.motocicleta.marca }} {{ p.motocicleta.modelo }}
+                </p>
                 <ul class="text-sm text-slate-300">
                     <li v-for="d in p.detalles" :key="d.id">
                         {{ d.cantidad }} × {{ d.repuesto?.nombre }} ·

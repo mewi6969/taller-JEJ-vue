@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreClienteRequest;
 use App\Http\Requests\UpdateClienteRequest;
 use App\Models\Cliente;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -17,9 +19,11 @@ class ClienteController extends Controller
 
         $clientes = Cliente::query()
             ->when(request('buscar'), function ($query, $buscar) {
-                $query->where('nombre', 'ilike', "%{$buscar}%")
-                    ->orWhere('apellido', 'ilike', "%{$buscar}%")
-                    ->orWhere('documento', 'ilike', "%{$buscar}%");
+                $query->where(function ($q) use ($buscar) {
+                    $q->where('nombre', 'ilike', "%{$buscar}%")
+                        ->orWhere('apellido', 'ilike', "%{$buscar}%")
+                        ->orWhere('documento', 'ilike', "%{$buscar}%");
+                });
             })
             ->latest()
             ->paginate(10)
@@ -67,7 +71,12 @@ class ClienteController extends Controller
     {
         $this->authorize('delete', $cliente);
 
-        $cliente->delete();
+        DB::transaction(function () use ($cliente) {
+            // La cuenta del portal también se archiva para que no pueda seguir entrando
+            User::where('cliente_id', $cliente->id)->delete();
+
+            $cliente->delete();
+        });
 
         return redirect()->route('clientes.index')
             ->with('success', 'Cliente eliminado correctamente.');

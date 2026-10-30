@@ -1,5 +1,6 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 import AppButton from '../../components/AppButton.vue';
 
@@ -12,6 +13,8 @@ const form = useForm({
     password: '',
     remember: false,
 });
+
+const verPassword = ref(false);
 
 function submit() {
     form.post('/login', {
@@ -92,13 +95,62 @@ function submit() {
                         >
                             Contraseña
                         </label>
-                        <input
-                            id="password"
-                            type="password"
-                            v-model="form.password"
-                            class="campo"
-                            autocomplete="current-password"
-                        />
+                        <div class="relative">
+                            <input
+                                id="password"
+                                :type="verPassword ? 'text' : 'password'"
+                                v-model="form.password"
+                                class="campo w-full pr-11"
+                                autocomplete="current-password"
+                            />
+                            <button
+                                type="button"
+                                class="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 transition-colors hover:text-slate-100"
+                                :aria-label="
+                                    verPassword
+                                        ? 'Ocultar contraseña'
+                                        : 'Mostrar contraseña'
+                                "
+                                :aria-pressed="verPassword"
+                                @click="verPassword = !verPassword"
+                            >
+                                <svg
+                                    v-if="verPassword"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="h-5 w-5"
+                                >
+                                    <path
+                                        d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"
+                                    />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                                <svg
+                                    v-else
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="h-5 w-5"
+                                >
+                                    <path
+                                        d="M17.94 17.94A10.4 10.4 0 0 1 12 19c-6.5 0-10-7-10-7a18.5 18.5 0 0 1 5.06-5.94"
+                                    />
+                                    <path
+                                        d="M9.9 4.24A9.1 9.1 0 0 1 12 5c6.5 0 10 7 10 7a18.5 18.5 0 0 1-2.16 3.19"
+                                    />
+                                    <path d="M1 1l22 22" />
+                                </svg>
+                            </button>
+                        </div>
                         <p
                             v-if="form.errors.password"
                             class="flex items-center gap-1.5 text-xs text-red-400"
@@ -145,7 +197,8 @@ function submit() {
                     <AppButton
                         href="/registro"
                         class="text-amber-400 hover:underline"
-                        >Crear cuenta
+                    >
+                        Crear cuenta
                     </AppButton>
                 </form>
             </div>

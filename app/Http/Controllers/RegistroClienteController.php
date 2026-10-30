@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -31,8 +32,18 @@ class RegistroClienteController extends Controller
             'apellido' => ['required', 'string', 'max:255'],
             'documento' => ['required', 'string', 'max:30'],
             'telefono' => ['required', 'string', 'max:20'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                'regex:/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/',
+                Rule::unique('users', 'email')->whereNull('deleted_at'),
+            ],
             'password' => ['required', 'confirmed', Password::min(8)],
+        ], [
+            'email.regex' => 'Escribe el correo completo, por ejemplo nombre@gmail.com.',
+            'email.email' => 'Ese correo no parece válido.',
+            'email.unique' => 'Ya existe una cuenta con este correo.',
         ]);
 
         $cliente = Cliente::whereRaw('lower(email) = ?', [$datos['email']])->first();
@@ -43,7 +54,7 @@ class RegistroClienteController extends Controller
             ]);
         }
 
-        if (! $cliente && Cliente::withTrashed()->where('documento', $datos['documento'])->exists()) {
+        if (! $cliente && Cliente::where('documento', $datos['documento'])->exists()) {
             return back()->withErrors([
                 'documento' => 'Este documento ya está registrado. Comunícate con el taller para actualizar tus datos.',
             ]);

@@ -16,7 +16,11 @@ class PedidoController extends Controller
         $this->soloAdminORecepcion($request);
 
         $pedidos = Pedido::query()
-            ->with(['cliente:id,nombre,apellido,telefono', 'detalles.repuesto:id,nombre'])
+            ->with([
+                'cliente:id,nombre,apellido,telefono',
+                'motocicleta:id,placa,marca,modelo',
+                'detalles.repuesto:id,nombre',
+            ])
             ->latest()
             ->get();
 

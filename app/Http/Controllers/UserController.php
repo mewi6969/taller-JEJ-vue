@@ -6,6 +6,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -77,9 +78,18 @@ class UserController extends Controller
     {
         $this->authorize('delete', $usuario);
 
-        $usuario->delete();
+        // Borrado definitivo: se va el usuario, sus sesiones abiertas y sus
+        // solicitudes de recuperación. Los servicios que atendió quedan
+        // "sin asignar" y, si era un cliente del portal, el registro del
+        // cliente y su historial se conservan.
+        DB::transaction(function () use ($usuario) {
+            DB::table('sessions')->where('user_id', $usuario->id)->delete();
+            DB::table('password_reset_tokens')->where('email', $usuario->email)->delete();
+
+            $usuario->forceDelete();
+        });
 
         return redirect()->route('usuarios.index')
-            ->with('success', 'Usuario eliminado correctamente.');
+            ->with('success', 'Usuario eliminado definitivamente.');
     }
 }

@@ -8,15 +8,18 @@ import ConfirmDialog from '../../components/ConfirmDialog.vue';
 import AppLayout from '../../layouts/AppLayout.vue';
 
 const props = defineProps({
-    pedidos: Array,
+    pedidos: {
+        type: Array,
+        default: () => [],
+    },
 });
 
 const pedidoACancelar = ref(null);
 
 const filas = computed(() =>
-    props.pedidos.map((pedido) => ({
+    (props.pedidos ?? []).map((pedido) => ({
         ...pedido,
-        total: pedido.detalles.reduce(
+        total: (pedido.detalles ?? []).reduce(
             (suma, d) => suma + d.cantidad * Number(d.precio_unitario),
             0,
         ),
@@ -76,6 +79,7 @@ function cancelarPedido() {
                         <tr>
                             <th>Fecha</th>
                             <th>Cliente</th>
+                            <th>Moto</th>
                             <th>Repuestos</th>
                             <th>Total</th>
                             <th>Estado</th>
@@ -99,10 +103,24 @@ function cancelarPedido() {
                                 </template>
                                 <span v-else class="text-slate-500">—</span>
                             </td>
+                            <td>
+                                <template v-if="pedido.motocicleta">
+                                    <span
+                                        class="rounded-md border border-amber-500/40 bg-amber-500/10 px-2.5 py-1 font-mono text-xs font-semibold tracking-widest text-amber-400 uppercase"
+                                    >
+                                        {{ pedido.motocicleta.placa }}
+                                    </span>
+                                    <div class="mt-1 text-xs text-slate-400">
+                                        {{ pedido.motocicleta.marca }}
+                                        {{ pedido.motocicleta.modelo }}
+                                    </div>
+                                </template>
+                                <span v-else class="text-slate-500">—</span>
+                            </td>
                             <td class="text-slate-300">
                                 <ul>
                                     <li
-                                        v-for="detalle in pedido.detalles"
+                                        v-for="detalle in pedido.detalles ?? []"
                                         :key="detalle.id"
                                     >
                                         {{ detalle.cantidad }} ×
@@ -157,7 +175,7 @@ function cancelarPedido() {
                         </tr>
                         <tr v-if="filas.length === 0">
                             <td
-                                colspan="6"
+                                colspan="7"
                                 class="py-12 text-center text-slate-400"
                             >
                                 No hay pedidos registrados.

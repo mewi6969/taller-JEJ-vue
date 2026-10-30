@@ -8,12 +8,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Pedido extends Model
 {
-    protected $fillable = ['cliente_id', 'estado', 'nota'];
+    protected $fillable = ['cliente_id', 'motocicleta_id', 'estado', 'nota'];
 
     /** @return BelongsTo<Cliente, $this> */
     public function cliente(): BelongsTo
     {
         return $this->belongsTo(Cliente::class);
+    }
+
+    /** @return BelongsTo<Motocicleta, $this> */
+    public function motocicleta(): BelongsTo
+    {
+        return $this->belongsTo(Motocicleta::class)->withTrashed();
     }
 
     /** @return HasMany<PedidoDetalle, $this> */
