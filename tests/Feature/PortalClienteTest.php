@@ -149,3 +149,74 @@ it('prohibe al cliente descargar el pdf de una factura ajena', function () {
         ->get("/portal/facturas/{$ajena->id}/pdf")
         ->assertForbidden();
 });
+
+it('rechaza un correo sin punto ni terminación', function () {
+    Mail::fake();
+
+    $this->post('/registro', [
+        'nombre' => 'Prueba',
+        'apellido' => 'Uno',
+        'documento' => '1061000003',
+        'telefono' => '3001112233',
+        'email' => 'prueba@gmail',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ])->assertSessionHasErrors('email');
+
+    expect(User::where('email', 'prueba@gmail')->exists())->toBeFalse();
+    Mail::assertNothingSent();
+});
+
+it('rechaza registrar un correo que ya tiene una cuenta activa', function () {
+    Mail::fake();
+    usuarioCliente(['email' => 'activo@example.com']);
+
+    $this->post('/registro', [
+        'nombre' => 'Otro',
+        'apellido' => 'Usuario',
+        'documento' => '1061000004',
+        'telefono' => '3004445566',
+        'email' => 'activo@example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ])->assertSessionHasErrors('email');
+});
+
+it('permite volver a registrarse con el mismo documento y correo tras borrar al cliente', function () {
+    Mail::fake();
+
+    $cliente = Cliente::factory()->create([
+        'documento' => '1061000005',
+        'email' => 'vuelve@example.com',
+    ]);
+    $user = User::factory()->create([
+        'rol' => 'cliente',
+        'cliente_id' => $cliente->id,
+        'email' => 'vuelve@example.com',
+    ]);
+
+    // Borrado como lo hace el panel: archiva la cuenta y el cliente
+    $admin = User::factory()->create(['rol' => 'admin']);
+    $this->actingAs($admin)->delete("/clientes/{$cliente->id}");
+
+    expect(Cliente::withTrashed()->find($cliente->id)->trashed())->toBeTrue()
+        ->and(User::withTrashed()->find($user->id)->trashed())->toBeTrue();
+
+    auth()->logout();
+
+    $this->post('/registro', [
+        'nombre' => 'Vuelve',
+        'apellido' => 'Cliente',
+        'documento' => '1061000005',
+        'telefono' => '3009998877',
+        'email' => 'vuelve@example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ])->assertRedirect('/verificar-correo');
+
+    $nuevo = User::where('email', 'vuelve@example.com')->first();
+
+    expect($nuevo)->not->toBeNull()
+        ->and($nuevo->id)->not->toBe($user->id)
+        ->and($nuevo->cliente_id)->not->toBe($cliente->id);
+});
